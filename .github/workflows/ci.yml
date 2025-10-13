@@ -1,0 +1,203 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - production
+concurrency:
+  # Pushing new changes to a branch will cancel any in-progress CI runs of this workflow
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  RAILS_ENV: test
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+  RAILS_SECRET_KEY_BASE: any-value-works-here-in-ci-but-prod-should-be-created-with-bundle-exec-rails-secret
+  ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: any-value-works-here-in-ci-but-prod-the-primary-key-should-be-created-with-bundle-exec-rails-db:encryption:init
+  ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: any-value-works-here-in-ci-but-prod-the-deterministic-key-should-be-created-with-bundle-exec-rails-db:encryption:init
+  ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: any-value-works-here-in-ci-but-prod-the-salt-should-be-created-with-bundle-exec-rails-db:encryption:init
+  MAIL_FROM: 'changeme@example.com'
+
+# Restrict jobs in this workflow to have no permissions by default; permissions
+# should be granted per job as needed using a dedicated `permissions` block
+permissions: {}
+
+jobs:
+  audit_dependencies:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Audit dependencies for security vulnerabilities
+        uses: g-rath/check-with-osv-detector@main
+  js_based_checks:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run js-lint --
+      - run: npm run scss-lint --
+      - run: npm run format-check --
+      - run: npm run test -- --coverage
+  ruby_based_checks:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      db:
+        image: postgres:latest
+        ports: ['5432:5432']
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s
+          --health-retries 5
+      # Uncomment these if you need them for your test suite
+      # redis:
+      #   image: redis:latest
+      #   ports:
+      #     - 6379:6379
+      # elasticsearch:
+      #   image: elasticsearch:latest
+      #   env:
+      #     cluster.name: whats-on-test-cluster
+      #     discovery.type: single-node
+      #     ES_JAVA_OPTS: '-Xms1g -Xmx1g'
+      #   ports:
+      #     - 9200:9200
+      #     - 9300:9300
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Required OS Packages
+        run: sudo apt-get -yqq install libpq-dev
+      - name: Set up Ruby (version given by .ruby-version)
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Check Run Ruby model annotations
+        run: bundle exec annotaterb models --frozen
+      - name: Check Ruby controller annotations
+        run: bundle exec chusaku --verbose --exit-with-error-on-annotation
+      - run: bundle exec rubocop
+      - run: bundle exec erb_lint .
+      - run: bundle exec brakeman --run-all-checks .
+      - run: bundle exec rails db:setup
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci
+      - run: bundle exec rspec spec --format progress
+      - name: Archive spec outputs
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: rspec-output-results
+          path: |
+            tmp/capybara
+            tmp/screenshots
+            tmp/lighthouse
+          retention-days: 5
+
+  # ACTION REQUIRED:
+  #   Uncomment the deployment block which suits your application. You should
+  #   remove all code (in this file and other yaml files in this dir) which
+  #   relate to other kinds of deployment.
+  #
+  # ######################################################################### #
+  # Deploy to EC2 with Capistrano
+  # ######################################################################### #
+
+  # deploy_to_ec2_staging:
+  #   permissions:
+  #     id-token: write # to use OIDC (aws-actions/configure-aws-credentials)
+  #     contents: read # to fetch code (actions/checkout)
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   needs:
+  #     - audit_dependencies
+  #     - ruby_based_checks
+  #     - js_based_checks
+  #   uses: ./.github/workflows/deploy_to_ec2.yml
+  #   with:
+  #     environment: staging
+  #     environment_url: 'https://staging.example.com'
+  #     assume_role_arn: TODO # e.g. 'arn:aws:iam::<ACCOUNT_ID>:role/<CLIENT_NAME>StagingGHARole'
+  #     aws_region: ap-southeast-2 # Sydney
+  #   secrets:
+  #     ssh_private_key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+  #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+  # deploy_to_ec2_production:
+  #   permissions:
+  #     id-token: write # to use OIDC (aws-actions/configure-aws-credentials)
+  #     contents: read # to fetch code (actions/checkout)
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/production'
+  #   needs:
+  #     - audit_dependencies
+  #     - ruby_based_checks
+  #     - js_based_checks
+  #   uses: ./.github/workflows/deploy_to_ec2.yml
+  #   with:
+  #     environment: production
+  #     environment_url: 'https://www.example.com'
+  #     assume_role_arn: TODO # e.g. 'arn:aws:iam::<ACCOUNT_ID>:role/<CLIENT_NAME>ProductionGHARole'
+  #     aws_region: ap-southeast-2 # Sydney
+  #   secrets:
+  #     ssh_private_key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+  #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+
+  # ######################################################################### #
+  # Deploy to Heroku
+  # ######################################################################### #
+
+  # deploy_to_heroku_staging:
+  #   permissions:
+  #     contents: read # to fetch code (actions/checkout)
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   needs:
+  #     - audit_dependencies
+  #     - ruby_based_checks
+  #     - js_based_checks
+  #   uses: ./.github/workflows/deploy_to_heroku.yml
+  #   with:
+  #     environment: staging
+  #     environment_url: 'https://staging.example.com'
+  #   secrets:
+  #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+  #     heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  #     heroku_app_name: ${{ secrets.HEROKU_APP_NAME_STAGING }}
+  #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+  # deploy_to_heroku_production:
+  #   permissions:
+  #     contents: read # to fetch code (actions/checkout)
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/production'
+  #   needs:
+  #     - audit_dependencies
+  #     - ruby_based_checks
+  #     - js_based_checks
+  #   uses: ./.github/workflows/deploy_to_heroku.yml
+  #   with:
+  #     environment: production
+  #     environment_url: 'https://www.example.com'
+  #   secrets:
+  #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+  #     heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  #     heroku_app_name: ${{ secrets.HEROKU_APP_NAME_PRODUCTION }}
+  #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}

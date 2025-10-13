@@ -1,0 +1,82 @@
+source "https://rubygems.org"
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby File.read(".ruby-version")
+
+gem "bootsnap", require: false
+gem "dotenv-rails", require: "dotenv/load"
+gem "pg"
+gem "puma"
+gem "rails", "8.0.2.1"
+
+gem "lograge"
+gem "okcomputer"
+gem "sentry-rails"
+gem "sentry-ruby"
+gem "shakapacker"
+
+gem "rack-canonical-host"
+
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Use Redis adapter to run Action Cable in production
+# gem "redis"
+
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
+
+# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# gem "image_processing", "~> 1.2"
+
+# Protect against accidentally slow migrations
+gem "strong_migrations"
+
+group :development do
+  gem "letter_opener"
+
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
+
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  gem "brakeman", require: false
+  gem "overcommit", require: false
+  gem "rubocop", require: false
+  gem "rubocop-capybara", require: false
+  gem "rubocop-factory_bot", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rspec", require: false
+  gem "rubocop-rspec_rails", require: false
+end
+
+group :development, :test do
+  gem "bullet"
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "pry-byebug"
+  gem "pry-rails"
+  gem "rspec-rails"
+
+  # ERB linting. Run via `bundle exec erb_lint .`
+  gem "erb_lint", require: false
+end
+
+group :test do
+  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
+  gem "selenium-webdriver"
+
+  gem "axe-matchers"
+  gem "lighthouse-matchers"
+  gem "simplecov", require: false
+end
+gem "pundit"
