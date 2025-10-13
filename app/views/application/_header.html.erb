@@ -1,3 +1,28 @@
 <%# locals: () %>
 
 <%# header and navigation menu %>
+<%=
+  content_tag(:style, nonce: content_security_policy_nonce) do
+    <<~STYLE
+      /* Temp style to pass Lighthouse audit */
+      a { display: block; padding: 0.5rem; }
+      input { padding: 0.5rem; margin: 0.5rem; }
+    STYLE
+  end
+%>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+  <div class="container-fluid">
+    <h1>Example devise nav</h1>
+    <ul class="navbar-nav">
+      <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
+      <% if current_user %>
+        <li class="navbar-text">You are <strong>Signed in</strong></li>
+        <li class="nav-item"><%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "nav-link" %></li>
+      <% else %>
+        <li class="navbar-text">You are <strong>Not signed in</strong></li>
+        <li class="nav-item"><%= link_to "Sign in", new_user_session_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, class: "nav-link" %></li>
+      <% end %>
+    </ul>
+  </div>
+</nav>

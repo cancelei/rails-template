@@ -80,3 +80,5 @@ group :test do
   gem "simplecov", require: false
 end
 gem "pundit"
+
+gem "devise", "~> 4.9"
