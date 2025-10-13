@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title>
-      <%= strip_tags(yield(:title)) + " - " if content_for?(:title) %>
+      <%= "#{strip_tags(yield(:title))} - " if content_for?(:title) %>
       Guide
     </title>
 
@@ -21,20 +21,20 @@
 
     <%= yield(:head) %>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <%# Prevents the full URL, including potentially sensitive query strings being sent to external origins %>
-    <meta name="referrer" content="origin-when-cross-origin">
+    <meta name="referrer" content="origin-when-cross-origin"/>
 
     <%# Specifies the default name of home screen bookmark in iOS %>
-    <meta name="apple-mobile-web-app-title" content="Guide">
+    <meta name="apple-mobile-web-app-title" content="Guide"/>
   </head>
 
   <body>
     <%
-      # An example of how to load an image via shakapacker. This image is in
-      # app/frontend/images/example.png
+# An example of how to load an image via shakapacker. This image is in
+# app/frontend/images/example.png
     %>
     <%= image_pack_tag "images/example.png", alt: "Example Image" %>
 
