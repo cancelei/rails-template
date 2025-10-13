@@ -13,6 +13,7 @@ module Users
     #   * http://maverickblogging.com/logout-is-broken-by-default-ruby-on-rails-web-applications/
     #   * https://makandracards.com/makandra/53562-devise-invalidating-all-sessions-for-a-user
     #
+    # @route DELETE /users/sign_out (destroy_user_session)
     def destroy
       current_user.invalidate_all_sessions!
       super

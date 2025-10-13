@@ -39,6 +39,10 @@ gem "stimulus-rails"
 gem "strong_migrations"
 
 group :development do
+  # code annotation
+  gem "annotaterb", require: false
+  gem "chusaku", require: false
+
   gem "letter_opener"
 
   # Use console on exceptions pages [https://github.com/rails/web-console]
