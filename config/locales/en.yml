@@ -30,4 +30,4 @@
 en:
   authorization:
     not_authorized: 'You are not authorised to perform this action.'
-  hello: "Hello world"
+  hello: 'Hello world'

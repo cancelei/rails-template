@@ -58,36 +58,40 @@ This project follows the
 
 ## Secrets
 
-All credentials and the `.env` file for this project are stored in Ackama 1Password vault named `TODO`
+All credentials and the `.env` file for this project are stored in Ackama
+1Password vault named `TODO`
 
     TODO: Ensure that all secrets in this app are stored **only** in Ackama 1Password
 
 ## Healthchecks
 
-A healthcheck endpoint is available at http://localhost:3000/healthchecks/all. Healthchecks are
-configured in `config/initializers/health_checks.rb`. By default, the following health checks are enabled:
+A healthcheck endpoint is available at http://localhost:3000/healthchecks/all.
+Healthchecks are configured in `config/initializers/health_checks.rb`. By
+default, the following health checks are enabled:
 
-* Default (app is running)
-* App version (the git commit that is running)
-* Database connectivity
+- Default (app is running)
+- App version (the git commit that is running)
+- Database connectivity
 
 Extra checks can be enabled or added within this initializer.
 
-The health check endpoint has it's own authentication checks that can be specified:
+The health check endpoint has it's own authentication checks that can be
+specified:
 
-* `ENV["HEALTHCHECK_HTTP_BASIC_AUTH_USERNAME]`
-* `ENV["HEALTHCHECK_HTTP_BASIC_AUTH_PASSWORD]`
+- `ENV["HEALTHCHECK_HTTP_BASIC_AUTH_USERNAME]`
+- `ENV["HEALTHCHECK_HTTP_BASIC_AUTH_PASSWORD]`
 
-This enables a unique set of credentials to exist for accessing the health checks endpoint.
+This enables a unique set of credentials to exist for accessing the health
+checks endpoint.
 
-If either of these settings are unspecified, then the configuration will fall back to the default
-HTTP basic auth settings:
+If either of these settings are unspecified, then the configuration will fall
+back to the default HTTP basic auth settings:
 
-* `ENV["HTTP_BASIC_AUTH_USERNAME]`
-* `ENV["HTTP_BASIC_AUTH_PASSWORD]`
+- `ENV["HTTP_BASIC_AUTH_USERNAME]`
+- `ENV["HTTP_BASIC_AUTH_PASSWORD]`
 
-If neither of these credentials are configured, then the healthcheck endpoint will be
-publicly available, which may be what you want, but maybe not.
+If neither of these credentials are configured, then the healthcheck endpoint
+will be publicly available, which may be what you want, but maybe not.
 
 ## Project Resources:
 
@@ -125,7 +129,8 @@ Before running this app and its tests locally you will need:
 1. Docker
 1. ElasticSearch
 
-   TODO: Add any dependencies that must be installed by a dev before they can run this app and tests
+   TODO: Add any dependencies that must be installed by a dev before they can
+   run this app and tests
 
 ### Running the app
 
@@ -136,7 +141,8 @@ Before running this app and its tests locally you will need:
 2. Run the setup script: `./bin/setup`
 3. Create `.env` file by copying data from 1Password.
 
-   TODO: Document if they need to run any seeds before running the app (unless it is part of ./bin/setup)
+   TODO: Document if they need to run any seeds before running the app (unless
+   it is part of ./bin/setup)
 
 Then run the following commands:
 
@@ -201,8 +207,8 @@ bin/rails app:template                             # Apply the template supplied
     TODO: Are there rake tasks new developers should know about? Document them here
     TODO: Is there anything else? If anything else is needed to get it properly running, include that here.
 
-If there is anything that might prevent a new dev from following the
-above steps and then running the tests successfully, make sure that it is documented.
+If there is anything that might prevent a new dev from following the above steps
+and then running the tests successfully, make sure that it is documented.
 
 ## Documentation:
 
@@ -212,12 +218,17 @@ above steps and then running the tests successfully, make sure that it is docume
 
 ### security.txt
 
-* `/.well-known/security.txt` exists with instructions which security researchers can use to contact us if they find an issue in this application.
+- `/.well-known/security.txt` exists with instructions which security
+  researchers can use to contact us if they find an issue in this application.
 
 ### Logging
 
-* This application uses the `lograge` gem to make Rails create a concise single log line for successful requests in deployed environments. See `config/initializers/lograge.rb` for details.
-* If `LOG_LEVEL` exists in the shell environment then it is used to set the log level. Otherise there is a hard-coded fallback for each environment. See `/config/environments/*.rb` for details.
+- This application uses the `lograge` gem to make Rails create a concise single
+  log line for successful requests in deployed environments. See
+  `config/initializers/lograge.rb` for details.
+- If `LOG_LEVEL` exists in the shell environment then it is used to set the log
+  level. Otherise there is a hard-coded fallback for each environment. See
+  `/config/environments/*.rb` for details.
 
 ### Running in staging mode locally
 
