@@ -1,0 +1,282 @@
+<% provide(:title, @tour.title) %>
+
+<div class="bg-gray-50">
+  <!-- Image Hero Section -->
+  <% if @tour.cover_image.attached? || @tour.images.attached? %>
+    <div class="bg-black" data-controller="image-gallery">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Cover Image -->
+        <% if @tour.cover_image.attached? %>
+          <div class="relative h-96 overflow-hidden">
+            <%= image_tag @tour.cover_image.variant(resize_to_limit: [1200, 800]),
+                         class: "w-full h-full object-cover cursor-pointer",
+                         alt: @tour.title,
+                         data: {
+                           image_gallery_target: "image",
+                           action: "click->image-gallery#openImage",
+                           full_url: url_for(@tour.cover_image),
+                           caption: @tour.title,
+                           index: 0
+                         } %>
+          </div>
+        <% end %>
+
+        <!-- Gallery Thumbnails -->
+        <% if @tour.gallery_images? %>
+          <div class="py-4 image-gallery">
+            <% @tour.images.each_with_index do |image, index| %>
+              <div class="image-gallery-item">
+                <%= image_tag image.variant(resize_to_limit: [400, 300]),
+                             class: "w-full h-full object-cover",
+                             alt: "#{@tour.title} - Image #{index + 1}",
+                             data: {
+                               image_gallery_target: "image",
+                               action: "click->image-gallery#openImage",
+                               full_url: url_for(image),
+                               caption: "#{@tour.title} - Image #{index + 1}",
+                               index: index + 1
+                             } %>
+                <div class="image-gallery-item-overlay">
+                  <svg class="image-gallery-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Lightbox Modal -->
+      <div data-image-gallery-target="modal" class="image-gallery-modal hidden">
+        <div class="image-gallery-modal-content">
+          <img data-image-gallery-target="modalImage" src="" alt="" class="image-gallery-modal-image"/>
+          <p data-image-gallery-target="modalCaption" class="image-gallery-modal-caption"></p>
+
+          <!-- Close Button -->
+          <button data-action="click->image-gallery#closeModal" class="image-gallery-modal-close" aria-label="Close">
+            ×
+          </button>
+
+          <!-- Navigation -->
+          <button data-action="click->image-gallery#previousImage" class="image-gallery-modal-nav image-gallery-modal-nav-prev" aria-label="Previous">
+            ←
+          </button>
+          <button data-action="click->image-gallery#nextImage" class="image-gallery-modal-nav image-gallery-modal-nav-next" aria-label="Next">
+            →
+          </button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-card shadow-sm">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-3xl font-bold text-foreground mb-6"><%= @tour.title %></h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="space-y-4">
+          <%# Tour Details with inline editing for admins %>
+          <%= render "tour_details", tour: @tour %>
+
+          <%# Add-ons Preview %>
+          <%= render "add_ons_preview", tour: @tour %>
+
+          <% tour_weather = @weather_snapshots.find { |s| s.forecast_date == @tour.starts_at.to_date } %>
+          <% if tour_weather %>
+            <div class="weather-card <%= tour_weather.pop > 0.5 ? 'weather-card-warning' : '' %>">
+              <div class="weather-card-header">
+                <h2 class="weather-card-title">Weather for Tour Day</h2>
+                <div class="weather-status-icon">
+                  <% if tour_weather.pop > 0.5 %>
+                    <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                  <% else %>
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                    </svg>
+                  <% end %>
+                </div>
+              </div>
+              <div class="text-center p-4 bg-card rounded-lg">
+                <p class="font-medium text-slate-900"><%= tour_weather.forecast_date.strftime('%B %d, %Y') %></p>
+                <p class="weather-card-temp"><%= tour_weather.min_temp %>° - <%= tour_weather.max_temp %>°C</p>
+                <p class="weather-card-description"><%= tour_weather.description %></p>
+                <% if tour_weather.pop > 0.5 %>
+                  <div class="weather-warning mt-3">
+                    <svg class="weather-warning-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <p class="weather-warning-text">
+                      High chance of rain (<%= (tour_weather.pop * 100).round %>%) - Consider bringing rain gear
+                    </p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @tour.can_book? %>
+          <div class="booking-form">
+            <div class="booking-form-header">
+              <h2 class="booking-form-title">Book This Tour</h2>
+              <div class="booking-form-price">
+                <%= number_to_currency((@tour.price_cents || 0) / 100.0, unit: @tour.currency || "USD") %>
+              </div>
+              <div class="booking-form-availability">
+                <span class="availability-indicator">
+                  <span class="availability-dot <%= @tour.available_spots > 10 ? 'high' : (@tour.available_spots > 0 ? 'medium' : 'sold-out') %>"></span>
+                  <span class="availability-text <%= @tour.available_spots > 10 ? 'high' : (@tour.available_spots > 0 ? 'medium' : 'sold-out') %>">
+                    <%= @tour.private_tour? ? 'Available for private booking' : "#{@tour.available_spots} spots available" %>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <% if @tour.private_tour? %>
+              <div class="alert alert-info mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <p class="font-semibold">Private Tour</p>
+                  <p class="text-sm">This is a private tour. You must book all <%= @tour.capacity %> spots at once.</p>
+                  <% if @tour.booking_deadline %>
+                    <p class="text-sm">Booking deadline: <%= @tour.booking_deadline.strftime('%b %d, %Y at %I:%M %p') %></p>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+            <% if user_signed_in? %>
+              <%= form_with model: [@tour, @tour.bookings.build],
+                            local: true,
+                            class: "space-y-4",
+                            data: {
+                              controller: "booking-calculator",
+                              booking_calculator_tour_price_value: @tour.price_cents || 0,
+                              booking_calculator_currency_value: @tour.currency
+                            } do |f| %>
+                <div class="form-group">
+                  <%= f.label :spots, "Number of spots", class: "form-label" %>
+                  <div class="booking-form-spots">
+                    <%= f.number_field :spots,
+                        min: (@tour.private_tour? ? @tour.capacity : 1),
+                        max: (@tour.private_tour? ? @tour.capacity : @tour.available_spots),
+                        value: (@tour.private_tour? ? @tour.capacity : 1),
+                        readonly: @tour.private_tour?,
+                        class: "form-input booking-form-spots-input",
+                        data: {
+                          booking_calculator_target: "spotsInput",
+                          action: "input->booking-calculator#calculate"
+                        } %>
+                    <span class="booking-form-spots-label">spots</span>
+                  </div>
+                  <p class="form-help">
+                    <%= @tour.private_tour? ? "Private tour requires all #{@tour.capacity} spots" : "#{@tour.available_spots} spots available" %>
+                  </p>
+                </div>
+
+                <%# Add-ons Selection %>
+                <% active_add_ons = @tour.tour_add_ons.active.by_position %>
+                <% if active_add_ons.any? %>
+                  <div class="form-group">
+                    <label class="form-label">Optional Add-ons</label>
+                    <div class="space-y-2" data-booking-calculator-target="addOnsContainer">
+                      <% active_add_ons.each do |add_on| %>
+                        <div class="addon-selector-card">
+                          <label class="flex items-start gap-3 cursor-pointer">
+                            <div class="flex items-center h-5 mt-1">
+                              <%= check_box_tag "add_on_ids[]",
+                                  add_on.id,
+                                  false,
+                                  class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary",
+                                  data: {
+                                    booking_calculator_target: "addOnCheckbox",
+                                    action: "click->booking-calculator#calculate change->booking-calculator#calculate",
+                                    price: add_on.price_cents,
+                                    pricing_type: add_on.pricing_type
+                                  } %>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                              <div class="flex items-start justify-between gap-2">
+                                <div class="flex-1">
+                                  <span class="text-sm font-medium text-foreground flex items-center gap-2">
+                                    <span><%= add_on.addon_type_icon %></span>
+                                    <span><%= add_on.name %></span>
+                                  </span>
+                                  <% if add_on.description.present? %>
+                                    <p class="text-xs text-muted-foreground mt-1">
+                                      <%= add_on.description %>
+                                    </p>
+                                  <% end %>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                  <span class="text-sm font-semibold text-primary whitespace-nowrap">
+                                    <%= add_on.formatted_price %>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+
+                <div class="booking-form-total">
+                  <div class="booking-form-total-row">
+                    <span>Tour price:</span>
+                    <span data-booking-calculator-target="tourSubtotal">
+                      <%= number_to_currency((@tour.price_cents || 0) / 100.0, unit: @tour.currency || "USD") %>
+                    </span>
+                  </div>
+                  <div class="booking-form-total-row" data-booking-calculator-target="addOnsRow" style="display: none;">
+                    <span>Add-ons:</span>
+                    <span data-booking-calculator-target="addOnsSubtotal">
+                      <%= number_to_currency(0, unit: @tour.currency || "USD") %>
+                    </span>
+                  </div>
+                  <div class="booking-form-total-row total">
+                    <span>Total:</span>
+                    <span data-booking-calculator-target="totalPrice">
+                      <%= number_to_currency((@tour.price_cents || 0) / 100.0, unit: @tour.currency || "USD") %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <%= f.submit 'Book Now', class: "btn-booking w-full" %>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="space-y-4">
+                <p class="text-muted-foreground">Please sign in or create an account to book this tour.</p>
+                <div class="space-y-3">
+                  <%= link_to 'Sign In', new_user_session_path, class: "btn-booking-secondary w-full text-center" %>
+                  <%= link_to 'Create Account', new_tourist_registration_path, class: "btn-booking-ghost w-full text-center" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+         <% else %>
+           <div class="alert alert-warning">
+             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2m-6-8a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+             </svg>
+             <p>This tour is not available for booking at this time.</p>
+           </div>
+         <% end %>
+       </div>
+
+       <!-- Comments Section -->
+       <% if @tour.guide&.guide_profile %>
+         <div class="mt-8">
+           <h2 class="text-2xl font-bold text-foreground mb-4">Comments for <%= @tour.guide.name %></h2>
+           <%= render 'comments/comments', guide_profile: @tour.guide.guide_profile %>
+         </div>
+       <% end %>
+     </div>
+   </div>
+ </div>

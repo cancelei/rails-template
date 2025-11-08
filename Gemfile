@@ -7,24 +7,28 @@ gem "bootsnap", require: false
 gem "dotenv-rails", require: "dotenv/load"
 gem "pg"
 gem "puma"
-gem "rails", "8.0.2.1"
+gem "rails", "~> 8.0.3"
 
-gem "lograge"
 gem "okcomputer"
+gem "propshaft"
 gem "sentry-rails"
 gem "sentry-ruby"
-gem "shakapacker"
 
 gem "rack-canonical-host"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
+# Tailwind CSS for Rails [https://github.com/rails/tailwindcss-rails]
+gem "tailwindcss-rails"
+
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
+# Bundle and transpile JavaScript with esbuild [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis"
@@ -33,7 +37,10 @@ gem "stimulus-rails"
 # gem "kredis"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
+
+# S3-compatible storage (iDrive e2)
+gem "aws-sdk-s3", require: false
 
 # Protect against accidentally slow migrations
 gem "strong_migrations"
@@ -82,7 +89,21 @@ group :test do
   gem "axe-matchers"
   gem "lighthouse-matchers"
   gem "simplecov", require: false
+
+  # HTTP mocking and testing
+  gem "vcr"
+  gem "webmock"
+
+  # Time manipulation for time-based tests
+  gem "timecop"
+
+  # Cleaner test matchers
+  gem "shoulda-matchers"
 end
 gem "pundit"
 
 gem "devise", "~> 4.9"
+
+gem "httparty"
+
+gem "kaminari"

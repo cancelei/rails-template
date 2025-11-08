@@ -1,0 +1,40 @@
+<% provide(:page_title, "Guide Profiles") %>
+
+<div>
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-foreground">Guide Profiles</h1>
+    <p class="mt-1 text-sm text-muted-foreground"><%= @guide_profiles.total_count %> total profiles</p>
+  </div>
+
+  <!-- Profiles Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @guide_profiles.each do |profile| %>
+      <%= turbo_frame_tag dom_id(profile), data: { turbo_action: "advance" } do %>
+        <div id="<%= dom_id(profile) %>" class="bg-card shadow rounded-lg border border-border overflow-hidden">
+          <div class="px-6 py-4">
+            <h3 class="text-lg font-medium text-foreground"><%= profile.user.name %></h3>
+            <p class="mt-1 text-sm text-muted-foreground"><%= profile.user.email %></p>
+            <p class="mt-4 text-sm text-gray-700 line-clamp-3"><%= profile.bio %></p>
+            <div class="mt-4 space-y-1 text-sm text-muted-foreground">
+              <p><strong>Experience:</strong> <%= profile.years_of_experience %> years</p>
+              <% if profile.languages.present? %>
+                <p><strong>Languages:</strong> <%= profile.languages %></p>
+              <% end %>
+            </div>
+          </div>
+          <div class="px-6 py-3 bg-muted text-right">
+            <%= link_to "Edit",
+                        edit_admin_guide_profile_path(profile),
+                        class: "text-indigo-600 hover:text-indigo-900 text-sm font-medium",
+                        data: { turbo_frame: "modal" } %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    <%== pagy_nav(@pagy) if defined?(@pagy) %>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<%# locals: (guide_profile:) %>
+<%= form_with model: [guide_profile, guide_profile.comments.build], class: "space-y-4" do |f| %>
+  <div class="form-group">
+    <%= f.label :content, "Leave a Comment", class: "form-label" %>
+    <%= f.text_area :content, rows: 4, class: "form-textarea", placeholder: "Share your experience with this guide..." %>
+  </div>
+
+  <%= f.submit "Post Comment", class: "btn-booking" %>
+<% end %>

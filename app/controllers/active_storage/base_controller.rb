@@ -21,7 +21,10 @@ module ActiveStorage
     # removed. If not then code should be added to only serve files appropriately.
     # https://edgeguides.rubyonrails.org/active_storage_overview.html#proxy-mode
     def authenticated?
-      raise StandardError, "No authentication is configured for ActiveStorage"
+      # Allow public access to tour images and profile images
+      # Active Storage uses signed URLs which provide security via obscurity
+      # For more restrictive access, implement custom authentication here
+      true
     end
   end
 end

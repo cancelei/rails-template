@@ -1,0 +1,144 @@
+<% provide(:title, "My Bookings") %>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="container mx-auto py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-foreground">My Tour Bookings</h1>
+        <p class="mt-1 text-sm text-muted-foreground">Manage bookings for your tours</p>
+      </div>
+      <%= link_to "Back to Dashboard",
+                  guide_dashboard_path,
+                  class: "inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground border border-border hover:border-foreground transition-colors" %>
+    </div>
+
+    <!-- Notification area -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Filters -->
+    <div class="mb-6 card">
+      <div class="card-body">
+        <%= form_with url: guides_bookings_path,
+                      method: :get,
+                      data: { controller: "search", turbo_action: "advance" },
+                      class: "grid grid-cols-1 md:grid-cols-3 gap-4" do |f| %>
+
+          <!-- Search -->
+          <div class="form-group mb-0">
+            <%= f.label :q, "Search", class: "form-label" %>
+            <%= f.text_field :q,
+                             value: params[:q],
+                             placeholder: "Search by customer name or email...",
+                             data: { action: "input->search#submit", search_target: "input" },
+                             class: "form-input" %>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="form-group mb-0">
+            <%= f.label :status, "Status", class: "form-label" %>
+            <%= f.select :status,
+                         options_for_select([
+                           ["All Statuses", ""],
+                           ["Pending", "pending"],
+                           ["Confirmed", "confirmed"],
+                           ["Completed", "completed"],
+                           ["Cancelled", "cancelled"]
+                         ], params[:status]),
+                         {},
+                         class: "form-input",
+                         data: { action: "change->search#submit" } %>
+          </div>
+
+          <!-- Tour Filter -->
+          <div class="form-group mb-0">
+            <%= f.label :tour_id, "Tour", class: "form-label" %>
+            <%= f.select :tour_id,
+                         options_from_collection_for_select(@tours, :id, :title, params[:tour_id]),
+                         { include_blank: "All Tours" },
+                         class: "form-input",
+                         data: { action: "change->search#submit" } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-sm font-medium text-muted-foreground">Total Bookings</h3>
+          <p class="text-2xl font-bold text-foreground mt-1"><%= @bookings.count %></p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-sm font-medium text-muted-foreground">Pending</h3>
+          <p class="text-2xl font-bold text-warning mt-1">
+            <%= @bookings.where(status: "pending").count %>
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-sm font-medium text-muted-foreground">Confirmed</h3>
+          <p class="text-2xl font-bold text-success mt-1">
+            <%= @bookings.where(status: "confirmed").count %>
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-sm font-medium text-muted-foreground">Cancelled</h3>
+          <p class="text-2xl font-bold text-danger mt-1">
+            <%= @bookings.where(status: "cancelled").count %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="card">
+      <div class="card-body p-0">
+        <% if @bookings.any? %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-border">
+              <thead class="bg-muted">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Tour
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Booked On
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="bookings_table_body" class="bg-card divide-y divide-border">
+                <%= render @bookings %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-foreground">No bookings found</h3>
+            <p class="mt-1 text-sm text-muted-foreground">
+              <%= params[:status].present? || params[:q].present? ? "Try adjusting your filters" : "Bookings for your tours will appear here" %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

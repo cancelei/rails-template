@@ -1,0 +1,105 @@
+<%#
+  Tour Details Display Partial
+  Used in public tour show page with inline editing for admins
+-%>
+
+<% tour ||= @tour %>
+
+<%= turbo_frame_tag dom_id(tour) do %>
+<div class="card">
+  <div class="card-body">
+    <div class="flex items-start justify-between mb-4">
+      <h2 class="text-xl font-semibold">Tour Details</h2>
+      <% if can_edit?(tour) %>
+        <%= link_to edit_tour_path(tour),
+            data: { turbo_frame: dom_id(tour) },
+            class: "btn btn-sm btn-outline flex items-center gap-1",
+            title: "Edit tour details" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <span>Edit</span>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="space-y-3 text-sm">
+      <div>
+        <p class="text-muted-foreground"><strong class="font-semibold">Description:</strong></p>
+        <p class="text-foreground"><%= tour.description %></p>
+      </div>
+
+      <div>
+        <p class="text-muted-foreground"><strong class="font-semibold">Guide:</strong></p>
+        <p class="text-foreground">
+          <%= tour.guide ? link_to(tour.guide.name, guide_profile_path(tour.guide.guide_profile), class: "text-primary hover:text-primary/80") : 'No guide assigned' %>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <p class="text-muted-foreground"><strong class="font-semibold">Start Date:</strong></p>
+          <p class="text-foreground"><%= tour.starts_at.strftime('%b %d, %Y') %></p>
+        </div>
+        <div>
+          <p class="text-muted-foreground"><strong class="font-semibold">Start Time:</strong></p>
+          <p class="text-foreground"><%= tour.starts_at.strftime('%I:%M %p') %></p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <p class="text-muted-foreground"><strong class="font-semibold">End Date:</strong></p>
+          <p class="text-foreground"><%= tour.ends_at.strftime('%b %d, %Y') %></p>
+        </div>
+        <div>
+          <p class="text-muted-foreground"><strong class="font-semibold">End Time:</strong></p>
+          <p class="text-foreground"><%= tour.ends_at.strftime('%I:%M %p') %></p>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-muted-foreground"><strong class="font-semibold">Location:</strong></p>
+        <p class="text-foreground">
+          <%= tour.location_name %><br />
+          <span class="text-xs">(<%= tour.latitude %>, <%= tour.longitude %>)</span>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <p class="text-muted-foreground text-xs"><strong class="font-semibold">Capacity:</strong></p>
+          <p class="text-foreground font-semibold"><%= tour.capacity %> people</p>
+        </div>
+        <div>
+          <p class="text-muted-foreground text-xs"><strong class="font-semibold">Available:</strong></p>
+          <p class="text-foreground font-semibold"><%= tour.available_spots %> spots</p>
+        </div>
+        <div>
+          <p class="text-muted-foreground text-xs"><strong class="font-semibold">Price:</strong></p>
+          <p class="text-foreground font-semibold">
+            <%= tour.price_cents ? number_to_currency(tour.price_cents / 100.0, unit: tour.currency) : 'Free' %>
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-muted-foreground"><strong class="font-semibold">Tour Type:</strong></p>
+        <span class="badge <%= tour.private_tour? ? 'badge-warning' : 'badge-success' %>">
+          <%= tour.tour_type.titleize %>
+        </span>
+        <% if tour.private_tour? && tour.booking_deadline %>
+          <p class="text-xs text-muted-foreground mt-1">
+            Booking deadline: <%= tour.booking_deadline.strftime('%b %d, %Y at %I:%M %p') %>
+          </p>
+        <% end %>
+      </div>
+
+      <div>
+        <p class="text-muted-foreground"><strong class="font-semibold">Status:</strong></p>
+        <span class="badge badge-info"><%= tour.status %></span>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

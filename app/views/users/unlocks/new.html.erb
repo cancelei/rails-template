@@ -1,16 +1,36 @@
-<h2>Resend unlock instructions</h2>
+<% provide(:title, "Unlock Account") %>
 
-<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "users/shared/error_messages", resource: %>
+<div class="min-h-screen bg-background flex items-center justify-center py-12 px-4">
+  <div class="max-w-md w-full">
+    <div class="bg-card rounded-lg shadow-md p-8">
+      <h1 class="text-3xl font-bold text-foreground mb-2 text-center">Unlock Your Account</h1>
+      <p class="text-center text-muted-foreground mb-8">Enter your email address and we'll send you instructions to unlock your account.</p>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post, class: "space-y-6" }) do |f| %>
+        <% if resource.errors.any? %>
+          <div class="alert alert-danger">
+            <h4 class="font-semibold mb-2"><%= pluralize(resource.errors.count, "error") %> prevented this request:</h4>
+            <ul class="text-sm list-disc list-inside">
+              <% resource.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="form-group">
+          <%= f.label :email, class: "form-label form-label-required" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input", placeholder: "your@email.com" %>
+        </div>
+
+        <div>
+          <%= f.submit "Send Unlock Instructions", class: "btn-booking w-full" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6 pt-6 border-t border-border text-center text-sm">
+        <%= render "users/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend unlock instructions" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>

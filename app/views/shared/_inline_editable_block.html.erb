@@ -1,0 +1,75 @@
+<%#
+  Reusable inline editable block component
+  Wraps a section of content that can be edited inline by authorized users
+
+  Usage:
+    <%= render "shared/inline_editable_block",
+        resource: @tour,
+        policy: policy(@tour),
+        edit_url: edit_tour_path(@tour),
+        edit_button_text: "Edit Tour",
+        wrapper_class: "border rounded-lg p-4" do
+%>
+      <h2><%= @tour.title %></h2>
+      <p><%= @tour.description %></p>
+    <% end %>
+
+  Parameters:
+    - resource: The ActiveRecord model being edited
+    - policy: The policy object for authorization
+    - edit_url: URL to trigger edit mode
+    - edit_button_text: Text for the edit button (default: "Edit")
+    - wrapper_class: CSS classes for the wrapper element
+    - button_position: Position of edit button ("top-right", "top-left", "bottom-right", "bottom-left")
+    - show_indicator: Show visual indicator that content is editable (default: true)
+-%>
+
+<%
+  resource ||= nil
+  policy ||= nil
+  edit_url ||= nil
+  edit_button_text ||= "Edit"
+  wrapper_class ||= "inline-editable-block group relative"
+  button_position ||= "top-right"
+  show_indicator = local_assigns.fetch(:show_indicator, true)
+  can_edit = policy&.edit? || false
+
+  position_classes = {
+    "top-right" => "absolute top-2 right-2",
+    "top-left" => "absolute top-2 left-2",
+    "bottom-right" => "absolute bottom-2 right-2",
+    "bottom-left" => "absolute bottom-2 left-2"
+  }
+  button_class = position_classes[button_position] || position_classes["top-right"]
+%>
+
+<div class="<%= wrapper_class %> <%= can_edit && show_indicator ? 'admin-editable' : '' %>"
+     id="<%= dom_id(resource) if resource %>"
+     data-controller="inline-edit"
+     data-inline-edit-editable-value="<%= can_edit %>">
+
+  <% if can_edit %>
+    <div class="<%= button_class %> opacity-0 group-hover:opacity-100 transition-opacity z-10">
+      <%= link_to edit_url,
+          data: {
+            turbo_frame: dom_id(resource),
+            action: "click->inline-edit#edit"
+          },
+          class: "inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm shadow-sm",
+          title: edit_button_text do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+        <span><%= edit_button_text %></span>
+      <% end %>
+    </div>
+
+    <% if show_indicator %>
+      <div class="absolute top-0 left-0 w-full h-full border-2 border-blue-300 rounded pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity"></div>
+    <% end %>
+  <% end %>
+
+  <div class="inline-editable-content">
+    <%= yield %>
+  </div>
+</div>

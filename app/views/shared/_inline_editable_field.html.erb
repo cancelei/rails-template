@@ -1,0 +1,62 @@
+<%#
+  Reusable inline editable field component
+
+  Usage:
+    <%= render "shared/inline_editable_field",
+        resource: @tour,
+        field_name: :title,
+        display_value: @tour.title,
+        policy: policy(@tour),
+        edit_url: edit_tour_path(@tour),
+        css_class: "text-2xl font-bold"
+%>
+
+  Parameters:
+    - resource: The ActiveRecord model being edited
+    - field_name: The attribute name (for DOM id generation)
+    - display_value: The current value to display
+    - policy: The policy object for authorization
+    - edit_url: URL to trigger edit mode
+    - css_class: Additional CSS classes for styling
+    - wrapper_class: CSS classes for the wrapper element
+    - tag: HTML tag for the display element (default: 'span')
+    - show_edit_button: Show/hide the edit button (default: true if can edit)
+-%>
+
+<%
+  resource ||= nil
+  field_name ||= nil
+  display_value ||= nil
+  policy ||= nil
+  edit_url ||= nil
+  css_class ||= ""
+  wrapper_class ||= "inline-editable-field group relative"
+  tag ||= "span"
+  show_edit_button = local_assigns.fetch(:show_edit_button, true)
+  can_edit = policy&.edit? || false
+%>
+
+<div class="<%= wrapper_class %>"
+     id="<%= "#{dom_id(resource)}_#{field_name}" if resource && field_name %>"
+     data-controller="inline-edit"
+     data-inline-edit-editable-value="<%= can_edit %>">
+
+  <%= content_tag tag, class: "#{css_class} #{can_edit ? 'hover:bg-gray-50 cursor-pointer transition-colors' : ''}" do %>
+    <%= display_value %>
+  <% end %>
+
+  <% if can_edit && show_edit_button %>
+    <%= link_to edit_url,
+        data: {
+          turbo_frame: dom_id(resource),
+          action: "click->inline-edit#edit"
+        },
+        class: "inline-edit-button ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-blue-600 hover:text-blue-800 text-sm",
+        title: "Edit #{field_name.to_s.humanize}" do %>
+      <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+      </svg>
+      <span class="sr-only">Edit</span>
+    <% end %>
+  <% end %>
+</div>

@@ -19,10 +19,11 @@ Rails.application.configure do
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.asset_host = "http://assets.example.com"
+  config.asset_host = ENV.fetch("ASSET_HOST", nil)
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Use iDrive e2 for production file storage
+  config.active_storage.service = :idrive_production
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   #
@@ -38,6 +39,24 @@ Rails.application.configure do
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
+  # Log to STDOUT for containerized environments.
+  config.logger = ActiveSupport::Logger.new($stdout) if ENV["RAILS_LOG_TO_STDOUT"].present?
+
+  # Prepend all log lines with the following tags.
+  config.log_tags = [:request_id]
+
+  # Use a different cache store in production.
+  config.cache_store = :memory_store
+
+  # Use a real queuing backend for Active Job (and separate queues per environment).
+  config.active_job.queue_adapter = :async
+
+  # Disable automatic flushing of the log to avoid log rotation issues.
+  config.autoflush_log = false
+
+  # Use default logging formatter so that PID and timestamp are not suppressed.
+  config.log_formatter = Logger::Formatter.new
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [:request_id]
@@ -87,14 +106,14 @@ Rails.application.configure do
 
   config.action_mailer.asset_host = "https://www.example.com"
 
-  # Specify outgoing SMTP server.
+  # Specify outgoing SMTP server using Emailit
   config.action_mailer.smtp_settings = {
-    address: ENV.fetch("SMTP_HOSTNAME"),
+    address: "smtp.emailit.com",
     port: ENV.fetch("SMTP_PORT", 587),
     enable_starttls_auto: true,
-    user_name: ENV.fetch("SMTP_USERNAME"),
-    password: ENV.fetch("SMTP_PASSWORD"),
-    authentication: "login",
+    user_name: ENV.fetch("EMAILIT_USERNAME"),
+    password: ENV.fetch("EMAILIT_API_KEY"),
+    authentication: :plain,
     domain: "www.example.com"
   }
 

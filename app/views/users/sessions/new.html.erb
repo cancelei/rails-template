@@ -1,26 +1,28 @@
-<h2>Log in</h2>
+<% provide(:title, "Sign in") %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<%= render "shared/auth_layout", title: "Welcome Back", description: "Sign in to your SeeInSp account" do %>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6", data: { controller: "form_validation loading_state", loading_state_loading_text: "Signing in..." } }) do |f| %>
+    <div class="form-group">
+      <%= f.label :email, class: "form-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input",
+                                placeholder: "your@email.com", required: true %>
+    </div>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
+    <div class="form-group">
+      <%= f.label :password, class: "form-label" %>
+      <%= f.password_field :password, autocomplete: "current-password", class: "form-input",
+                                      placeholder: "Enter your password", required: true %>
+    </div>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+    <% if devise_mapping.rememberable? %>
+      <div class="flex items-center">
+        <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" %>
+        <%= f.label :remember_me, "Remember me for 2 weeks", class: "ml-2 block text-sm text-foreground" %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.submit "Sign In", class: "btn-booking w-full" %>
     </div>
   <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
 <% end %>
-
-<%= render "users/shared/links" %>

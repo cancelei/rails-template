@@ -1,0 +1,53 @@
+<%# locals: (tour:) %>
+<%= turbo_frame_tag dom_id(tour), target: "_top" do %>
+<tr id="<%= dom_id(tour) %>_row">
+  <td class="px-4 sm:px-6 py-4">
+    <div class="text-sm font-medium text-foreground"><%= tour.title %></div>
+    <div class="text-sm text-muted-foreground"><%= tour.location_name %></div>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+    <div class="text-sm text-foreground"><%= tour.guide.name %></div>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+    <% badge_color = case tour.status
+                     when "scheduled" then "bg-info/20 text-info"
+                     when "in_progress" then "bg-warning/20 text-warning"
+                     when "completed" then "bg-success/20 text-success"
+                     else "bg-muted text-muted-foreground"
+                     end %>
+    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= badge_color %>">
+      <%= tour.status.titleize %>
+    </span>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+    <%= tour.starts_at.strftime("%b %d, %Y") %>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+    <% if tour.price_cents.present? %>
+      <% currency_unit = tour.currency.presence || I18n.t("number.currency.format.unit", default: "$") %>
+      <%= number_to_currency(tour.price_cents / 100.0, unit: currency_unit) %>
+    <% else %>
+      <span class="italic text-muted-foreground">Free</span>
+    <% end %>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <%= link_to "View",
+                admin_tour_path(tour),
+                class: "text-primary hover:text-opacity-80 mr-4",
+                data: { turbo_frame: "_top" } %>
+    <%= link_to "Add-ons",
+                admin_tour_tour_add_ons_path(tour),
+                class: "text-primary hover:text-opacity-80 mr-4",
+                title: "Manage add-ons (#{tour.tour_add_ons.count})" %>
+    <%= link_to "Edit",
+                edit_admin_tour_path(tour),
+                class: "text-primary hover:text-opacity-80 mr-4",
+                data: { turbo_frame: dom_id(tour), action: "click->loading-state#showLoading" } %>
+    <%= button_to "Delete",
+                  admin_tour_path(tour),
+                  method: :delete,
+                  form: { data: { turbo_confirm: "Are you sure you want to delete this tour?" } },
+                  class: "text-danger hover:text-opacity-80" %>
+  </td>
+</tr>
+<% end %>

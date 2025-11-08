@@ -1,0 +1,6 @@
+<%
+  # Initialize cache for booking stats
+  @booking_stats_cache = { @comment.user.id => @comment.user.booking_stats_with_guide(@guide_profile.user) }
+%>
+<%= turbo_stream.prepend "comments", partial: "comments/comment", locals: { comment: @comment, guide_profile: @guide_profile, is_liked: false } %>
+<%= turbo_stream.replace "comment_form", partial: "comments/form", locals: { guide_profile: @guide_profile, comment: @guide_profile.comments.build } %>

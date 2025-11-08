@@ -1,0 +1,84 @@
+<%# locals: () %>
+<%# Local variables: user %>
+<%= form_with model: [:admin, user],
+              class: "space-y-6",
+              data: { turbo_frame: "_top" } do |f| %>
+
+  <% if user.errors.any? %>
+    <div class="rounded-md bg-danger/10 p-4 border border-danger/20">
+      <div class="flex">
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-danger">
+            <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-danger">
+            <ul class="list-disc pl-5 space-y-1">
+              <% user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render "shared/form_field",
+             form: f,
+             field: :name,
+             label: "Full Name",
+             type: :text,
+             placeholder: "John Doe",
+             required: true %>
+
+  <%= render "shared/form_field",
+             form: f,
+             field: :email,
+             label: "Email Address",
+             type: :email,
+             placeholder: "user@example.com",
+             required: true %>
+
+  <%= render "shared/form_field",
+             form: f,
+             field: :role,
+             label: "Role",
+             type: :select,
+             options_list: User.roles.keys.map { |r| [r.titleize, r] },
+             required: true %>
+
+  <%= render "shared/form_field",
+             form: f,
+             field: :phone,
+             label: "Phone Number",
+             type: :text,
+             placeholder: "(555) 123-4567" %>
+
+  <% if user.new_record? %>
+    <%= render "shared/form_field",
+               form: f,
+               field: :password,
+               label: "Password",
+               type: :password,
+               placeholder: "Set initial password",
+               required: true,
+               extra_attributes: { autocomplete: "new-password" } %>
+
+    <%= render "shared/form_field",
+               form: f,
+               field: :password_confirmation,
+               label: "Confirm Password",
+               type: :password,
+               placeholder: "Confirm password",
+               required: true,
+               extra_attributes: { autocomplete: "new-password" } %>
+  <% end %>
+
+  <div class="flex justify-end space-x-3 pt-6 border-t border-border">
+    <%= link_to "Cancel",
+                "#",
+                class: "inline-flex items-center px-4 py-2 border border-border shadow-sm text-sm font-medium rounded-md text-foreground bg-card hover:bg-muted",
+                data: { action: "click->modal#close" } %>
+    <%= f.submit class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-opacity-90" %>
+  </div>
+<% end %>

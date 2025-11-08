@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
+ <!DOCTYPE html>
+ <html lang="en">
+   <head>
+
     <title>
       <%= "#{strip_tags(yield(:title))} - " if content_for?(:title) %>
       Guide
@@ -10,14 +11,22 @@
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= tag.meta name: "sentry-dsn", content: ENV["SENTRY_DSN"] if ENV["SENTRY_DSN"].present? %>
+    <%= tag.meta name: "sentry-environment", content: ENV["SENTRY_ENV"] || Rails.env %>
 
     <!-- Guide <%= Rails.application.config.version %> (<%= Rails.application.config.version_time&.iso8601 || "Unknown" %>) -->
 
-    <%# CSS should go closest to the top of the document as possible. %>
-    <%= stylesheet_pack_tag("application", media: "all", "data-turbolinks-track": "reload") %>
+    <%# Performance Optimizations %>
+    <%= tag.meta name: "description", content: "Discover amazing tours with experienced guides. Book your next adventure today." %>
+    <%= tag.link rel: "preconnect", href: "https://fonts.googleapis.com" %>
+    <%= tag.link rel: "dns-prefetch", href: "https://cdn.example.com" %>
+    <%= tag.link rel: "manifest", href: "/manifest.json" if Rails.env.production? %>
 
-    <%# JavaScript must be in head for Turbolinks to work. %>
-    <%= javascript_pack_tag "application", "data-turbolinks-track": "reload", defer: true, nonce: true %>
+     <%# CSS should go closest to the top of the document as possible. %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all" %>
+
+    <%# JavaScript for Turbo and Stimulus - deferred for better performance %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 
     <%= yield(:head) %>
 
@@ -29,22 +38,25 @@
 
     <%# Specifies the default name of home screen bookmark in iOS %>
     <meta name="apple-mobile-web-app-title" content="Guide"/>
+
+    <%# Performance: Enable HTTP/2 Push, preload critical resources %>
+    <link rel="preload" as="style" href="<%= stylesheet_path("application") %>"/>
+    <link rel="preload" as="script" href="<%= javascript_path("application") %>"/>
   </head>
 
   <body>
-    <%
-# An example of how to load an image via shakapacker. This image is in
-# app/frontend/images/example.png
-    %>
-    <%= image_pack_tag "images/example.png", alt: "Example Image" %>
+    <div>
+      <%= render "application/analytics/body" %>
 
-    <%= render "application/analytics/body" %>
+      <%= render("application/header") %>
+      <%= render("application/flash") %>
 
-    <%= render("application/header") %>
-    <%= render("application/flash") %>
+      <%# Notifications container for Turbo Stream updates %>
+      <div id="notifications" class="fixed top-20 right-4 z-50 space-y-2"></div>
 
-    <div role="main">
-      <%= yield %>
+      <div role="main">
+        <%= yield %>
+      </div>
     </div>
   </body>
 </html>

@@ -1,0 +1,112 @@
+<% provide(:title, @guide_profile.user.name) %>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <%# Guide Profile with inline editing for admins %>
+    <div class="card mb-8">
+      <%= turbo_frame_tag dom_id(@guide_profile) do %>
+        <%= render "profile_display", guide_profile: @guide_profile %>
+      <% end %>
+    </div>
+
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold mb-6 text-foreground">All Tours</h2>
+      <% if @tours.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @tours.each do |tour| %>
+            <div class="tour-card">
+              <div class="tour-card-content">
+                <h3 class="tour-card-title"><%= link_to tour.title, tour, class: "text-foreground hover:text-primary transition-colors" %></h3>
+                <p class="tour-card-description"><%= tour.description.truncate(100) %></p>
+                <div class="tour-card-meta">
+                  <div class="space-y-1 text-sm text-muted-foreground">
+                    <p><strong class="font-semibold">Date:</strong> <%= tour.starts_at.strftime('%b %d, %Y') %></p>
+                    <p><strong class="font-semibold">Status:</strong> <span class="badge badge-info text-xs"><%= tour.status %></span></p>
+                    <% if tour.weather_snapshots.any? %>
+                      <p><strong class="font-semibold">Weather:</strong> <%= tour.weather_snapshots.first.description %> (<%= tour.weather_snapshots.first.min_temp %>° - <%= tour.weather_snapshots.first.max_temp %>°C)</p>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="tour-card-actions">
+                  <%= link_to "View Details", tour, class: "btn-booking-secondary btn-sm flex-1 text-center" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state-card">
+          <div class="empty-state-icon">
+            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+          </div>
+          <h3 class="empty-state-title">No tours yet</h3>
+          <p class="empty-state-description">This guide hasn't created any tours yet.</p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold mb-6 text-foreground">Completed Tours</h2>
+      <% if @last_tours.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @last_tours.each do |tour| %>
+            <div class="card opacity-75">
+              <div class="card-body">
+                <h3 class="text-lg font-semibold mb-2"><%= link_to tour.title, tour, class: "text-foreground hover:text-primary transition-colors" %></h3>
+                <p class="text-sm text-muted-foreground mb-3"><%= tour.description.truncate(100) %></p>
+                <p class="text-sm"><strong class="font-semibold">Date:</strong> <%= tour.starts_at.strftime('%b %d, %Y') %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state-card">
+          <h3 class="empty-state-title">No completed tours</h3>
+          <p class="empty-state-description">This guide hasn't completed any tours yet.</p>
+        </div>
+      <% end %>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-bold mb-6 text-foreground">Upcoming Tours</h2>
+      <% if @upcoming_tours.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @upcoming_tours.each do |tour| %>
+            <div class="tour-card">
+              <div class="tour-card-content">
+                <h3 class="tour-card-title"><%= link_to tour.title, tour, class: "text-foreground hover:text-primary transition-colors" %></h3>
+                <p class="tour-card-description"><%= tour.description.truncate(100) %></p>
+                <div class="tour-card-meta">
+                  <div class="space-y-1 text-sm text-muted-foreground">
+                    <p><strong class="font-semibold">Date:</strong> <%= tour.starts_at.strftime('%b %d, %Y') %></p>
+                    <p><strong class="font-semibold">Available:</strong> <span class="spot-indicator <%= tour.available_spots > 10 ? 'high' : (tour.available_spots > 0 ? 'medium' : 'sold-out') %>"><%= tour.available_spots %> spots</span></p>
+                    <% if tour.weather_snapshots.any? %>
+                      <p><strong class="font-semibold">Weather:</strong> <%= tour.weather_snapshots.first.description %> (<%= tour.weather_snapshots.first.min_temp %>° - <%= tour.weather_snapshots.first.max_temp %>°C)</p>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="tour-card-actions">
+                  <%= link_to "View Details", tour, class: "btn-booking-secondary btn-sm flex-1 text-center" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state-card">
+          <h3 class="empty-state-title">No upcoming tours</h3>
+          <p class="empty-state-description">Check back soon for new tour offerings from this guide.</p>
+        </div>
+      <% end %>
+    </div>
+
+     <!-- Comments Section -->
+     <div class="mt-8">
+       <h2 class="text-2xl font-bold text-foreground mb-4">Comments for <%= @guide_profile.user.name %></h2>
+       <%= render 'comments/comments', guide_profile: @guide_profile %>
+     </div>
+   </div>
+ </div>

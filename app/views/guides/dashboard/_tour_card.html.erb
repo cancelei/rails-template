@@ -1,0 +1,66 @@
+<%# locals: (tour:, booking: nil) %>
+<div class="card">
+  <div class="card-body">
+    <div class="flex items-start justify-between">
+      <div class="flex-1">
+        <h3 class="text-xl font-semibold text-foreground">
+          <%= link_to tour.title, tour_path(tour), class: "hover:text-primary transition-colors" %>
+        </h3>
+        <p class="text-muted-foreground mt-2"><%= tour.description.truncate(150) %></p>
+
+        <div class="mt-4 grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-muted-foreground">Date</p>
+            <p class="font-medium text-foreground"><%= tour.starts_at.strftime('%B %d, %Y at %I:%M %p') %></p>
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground">Duration</p>
+            <p class="font-medium text-foreground"><%= tour.duration_minutes %> minutes</p>
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground">Capacity</p>
+            <p class="font-medium text-foreground"><%= tour.max_spots %> spots</p>
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground">Available</p>
+            <p class="font-medium text-foreground">
+              <span class="spot-indicator <%= tour.available_spots > 10 ? 'high' : (tour.available_spots > 0 ? 'medium' : 'sold-out') %>">
+                <%= tour.available_spots %> spots
+              </span>
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground">Status</p>
+            <p class="font-medium text-foreground">
+              <span class="badge badge-<%= tour.status %>"><%= tour.status.titleize %></span>
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground">Bookings</p>
+            <p class="font-medium text-foreground"><%= tour.bookings.count %></p>
+          </div>
+        </div>
+
+        <% if tour.weather_snapshots.any? %>
+          <div class="mt-4 p-3 bg-muted rounded-lg">
+            <p class="text-sm text-muted-foreground mb-1">Weather Forecast</p>
+            <p class="text-foreground">
+              <%= tour.weather_snapshots.first.description %>
+              (<%= tour.weather_snapshots.first.min_temp %>° - <%= tour.weather_snapshots.first.max_temp %>°C)
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-4 flex gap-3 border-t border-border pt-4">
+      <%= link_to "View Details", tour_path(tour), class: "btn-booking-secondary btn-sm" %>
+      <%= link_to "Edit Inline",
+                  edit_tour_path(tour),
+                  class: "btn-booking-secondary btn-sm",
+                  data: { turbo_frame: dom_id(tour) } %>
+      <%= link_to "Edit Page", edit_tour_path(tour), class: "btn-booking-secondary btn-sm" %>
+      <%= link_to "Manage Bookings", tour_path(tour, anchor: "bookings"), class: "btn-booking-secondary btn-sm" %>
+    </div>
+  </div>
+</div>

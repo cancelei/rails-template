@@ -1,0 +1,33 @@
+<%# locals: (guide_profile:) %>
+<div id="comments">
+  <% comments = guide_profile.comments.includes(:user).order(created_at: :desc) %>
+  <% if user_signed_in? %>
+    <% liked_comment_ids = current_user.likes.where(comment: comments).pluck(:comment_id).to_set %>
+  <% end %>
+  <%
+    # Preload booking stats for all comment authors to avoid N+1 queries
+    @booking_stats_cache = comments.map(&:user).uniq.each_with_object({}) do |user, hash|
+      hash[user.id] = user.booking_stats_with_guide(guide_profile.user)
+    end
+  %>
+  <% comments.each do |comment| %>
+    <%= render "comments/comment",
+               comment:,
+               guide_profile:,
+               is_liked: liked_comment_ids&.include?(comment.id) || false %>
+  <% end %>
+
+  <% if user_signed_in? %>
+    <div id="comment_form">
+      <% if current_user.has_booking_with_guide?(guide_profile.user) %>
+        <%= render "comments/form", guide_profile: %>
+      <% else %>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <p class="text-yellow-800">You can only comment on guides you have booked tours with.</p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-gray-500 text-center py-4">Please sign in to leave a comment.</p>
+  <% end %>
+</div>

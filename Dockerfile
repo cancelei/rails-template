@@ -1,7 +1,7 @@
-# Pull from the latest Ruby version
+# Pull from the Ruby version specified in .ruby-version
 # We don't use slim or alpine variants as we invariably need build tooling, which
 # the base image includes for us.
-FROM ruby
+FROM ruby:3.2.1
 
 # Avoid issues with file encoding in Ruby by setting these two environment variables
 # This tells the underlying OS to expect UTF-8 encoding (e.g. UTF-8 encoding in the US language)
@@ -15,13 +15,13 @@ ENV LANG=C \
 RUN apt-get update -qq &&\
     apt-get install -y curl
 
-# Install Node.js PPA for asset management
-# As of writing, Node 10 is the most recent LTS.
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+# Install Node.js PPA for asset management (Node 20 LTS to match .node-version)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash
 
-# Install Google Chrome PPA. Chrome is required for headless system tests.
-RUN curl -q https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+# Install Google Chrome repository and key (needed for headless system tests)
+RUN install -d /usr/share/keyrings &&\
+    curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-linux-signing-keyring.gpg
+RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
 
 # Install system dependencies, and remove curl now that we have PPAs set up
 # We also clean out system files we don't need to reduce image size:
@@ -53,14 +53,14 @@ USER deploy
 
 # Add just the dependency manifests before installing.
 # This reduces the chance that bundler or NPM will get a cold cache because some kind of application file changed.
-ADD Gemfile* package.json package-lock.json /usr/src/app/
+ADD --chown=deploy:deploy .ruby-version Gemfile Gemfile.lock package.json package-lock.json /usr/src/app/
 WORKDIR /usr/src/app
 RUN bundle check || bundle install &&\
     npm ci
 
 # Add all application code to /usr/src/app and set this as the working directory
 # of the container
-ADD . /usr/src/app
+ADD --chown=deploy:deploy . /usr/src/app
 
 EXPOSE $PORT
 

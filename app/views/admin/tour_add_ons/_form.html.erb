@@ -1,0 +1,127 @@
+<%# locals: (tour:, tour_add_on:) %>
+
+<%= form_with model: [:admin, tour, tour_add_on],
+              class: "space-y-4",
+              data: { controller: "form_validation loading_state", loading_state_loading_text: "Saving..." } do |f| %>
+
+  <div class="form-group">
+    <%= f.label :name, class: "form-label form-label-required" %>
+    <%= f.text_field :name,
+                     class: "form-input",
+                     placeholder: "e.g., Hotel Pickup - Paulista",
+                     required: true,
+                     maxlength: 255 %>
+    <% if tour_add_on.errors[:name].any? %>
+      <p class="form-error"><%= tour_add_on.errors[:name].first %></p>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :addon_type, "Type", class: "form-label form-label-required" %>
+    <%= f.select :addon_type,
+                 options_for_select(
+                   [
+                     ["🚗 Transportation", "transportation"],
+                     ["🍽️ Food & Beverage", "food_beverage"],
+                     ["📸 Photography", "photography"],
+                     ["🎒 Equipment & Gear", "equipment"]
+                   ],
+                   tour_add_on.addon_type
+                 ),
+                 {},
+                 class: "form-select",
+                 required: true %>
+    <% if tour_add_on.errors[:addon_type].any? %>
+      <p class="form-error"><%= tour_add_on.errors[:addon_type].first %></p>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :description, class: "form-label" %>
+    <%= f.text_area :description,
+                    class: "form-textarea",
+                    rows: 3,
+                    placeholder: "Describe what's included in this add-on...",
+                    maxlength: 1000 %>
+    <p class="form-help"><%= tour_add_on.description&.length || 0 %> / 1000 characters</p>
+    <% if tour_add_on.errors[:description].any? %>
+      <p class="form-error"><%= tour_add_on.errors[:description].first %></p>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class="form-group">
+      <%= f.label :price_cents, "Price (cents)", class: "form-label form-label-required" %>
+      <%= f.number_field :price_cents,
+                         class: "form-input",
+                         placeholder: "5000",
+                         min: 1,
+                         required: true %>
+      <p class="form-help">In cents (e.g., 5000 = R$50)</p>
+      <% if tour_add_on.errors[:price_cents].any? %>
+        <p class="form-error"><%= tour_add_on.errors[:price_cents].first %></p>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :currency, class: "form-label form-label-required" %>
+      <%= f.select :currency,
+                   options_for_select(
+                     [["Brazilian Real (BRL)", "BRL"], ["US Dollar (USD)", "USD"], ["Euro (EUR)", "EUR"]],
+                     tour_add_on.currency || "BRL"
+                   ),
+                   {},
+                   class: "form-select",
+                   required: true %>
+      <% if tour_add_on.errors[:currency].any? %>
+        <p class="form-error"><%= tour_add_on.errors[:currency].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :pricing_type, "Pricing Type", class: "form-label form-label-required" %>
+    <%= f.select :pricing_type,
+                 options_for_select(
+                   [
+                     ["Per Person (multiplies by # of guests)", "per_person"],
+                     ["Flat Fee (fixed price regardless of group size)", "flat_fee"]
+                   ],
+                   tour_add_on.pricing_type
+                 ),
+                 {},
+                 class: "form-select",
+                 required: true %>
+    <% if tour_add_on.errors[:pricing_type].any? %>
+      <p class="form-error"><%= tour_add_on.errors[:pricing_type].first %></p>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :maximum_quantity, "Maximum Quantity (optional)", class: "form-label" %>
+    <%= f.number_field :maximum_quantity,
+                       class: "form-input",
+                       placeholder: "Leave blank for unlimited",
+                       min: 1 %>
+    <p class="form-help">Limit how many times this add-on can be selected per booking</p>
+    <% if tour_add_on.errors[:maximum_quantity].any? %>
+      <p class="form-error"><%= tour_add_on.errors[:maximum_quantity].first %></p>
+    <% end %>
+  </div>
+
+  <div class="flex items-center">
+    <%= f.check_box :active, class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" %>
+    <%= f.label :active, "Active (visible to customers)", class: "ml-2 block text-sm text-foreground" %>
+  </div>
+
+  <% if tour_add_on.errors[:base].any? %>
+    <div class="bg-danger/10 border border-danger/20 rounded-lg p-4">
+      <p class="text-danger text-sm"><%= tour_add_on.errors[:base].first %></p>
+    </div>
+  <% end %>
+
+  <div class="form-actions">
+    <%= f.submit tour_add_on.new_record? ? "Create Add-on" : "Update Add-on",
+                 class: "btn-booking w-full" %>
+  </div>
+<% end %>

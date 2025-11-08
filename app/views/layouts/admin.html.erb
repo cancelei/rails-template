@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      <%= "#{strip_tags(yield(:title))} - " if content_for?(:title) %>
+      Admin - Guide
+    </title>
+
+    <%= render "application/analytics/head" %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= tag.meta name: "sentry-dsn", content: ENV["SENTRY_DSN"] if ENV["SENTRY_DSN"].present? %>
+    <%= tag.meta name: "sentry-environment", content: ENV["SENTRY_ENV"] || Rails.env %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="referrer" content="origin-when-cross-origin"/>
+    <meta name="apple-mobile-web-app-title" content="Admin - Guide"/>
+  </head>
+
+  <body class="bg-muted" data-controller="error-handler">
+    <%= render "application/analytics/body" %>
+
+    <div class="flex h-screen overflow-hidden">
+      <!-- Persistent Sidebar -->
+      <%= render "admin/shared/sidebar" %>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <%= render "admin/shared/header" %>
+
+        <!-- Flash Messages -->
+        <div class="px-6 pt-4">
+          <%= render "application/flash" %>
+        </div>
+
+        <!-- Turbo Frame for page transitions -->
+        <div class="flex-1 overflow-y-auto px-4 sm:px-6 py-4 pb-20 lg:pb-4">
+          <%= turbo_frame_tag "admin_content", data: { turbo_action: "advance" } do %>
+            <%= yield %>
+          <% end %>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal Container -->
+    <%= turbo_frame_tag "modal", class: "hidden fixed inset-0 z-50", data: { controller: "modal" } %>
+
+    <!-- Toast Notifications Container -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2" data-controller="notification"></div>
+
+    <!-- Turbo Stream for admin notifications -->
+    <% if current_user %>
+      <%= turbo_stream_from "admin_notifications_#{current_user.id}" %>
+    <% end %>
+  </body>
+</html>

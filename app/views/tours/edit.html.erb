@@ -1,0 +1,233 @@
+<% provide(:title, "Edit Tour") %>
+
+<div class="min-h-screen bg-background">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="max-w-2xl">
+      <h1 class="text-4xl md:text-5xl font-bold mb-2 text-foreground">Edit Tour</h1>
+      <p class="text-lg text-muted-foreground mb-8">Update your tour details</p>
+
+      <div class="bg-card rounded-lg shadow-sm p-6 md:p-8">
+        <%= form_with model: @tour, local: true, class: "space-y-6" do |f| %>
+          <!-- Basic Information -->
+          <div>
+            <h2 class="text-lg font-semibold text-foreground mb-4">Tour Information</h2>
+
+            <%= render "shared/form_field",
+                       form: f,
+                       field: :title,
+                       label: "Tour Title",
+                       type: :text,
+                       placeholder: "e.g., Mountain Hiking Adventure",
+                       required: true %>
+
+            <%= render "shared/form_field",
+                       form: f,
+                       field: :description,
+                       label: "Tour Description",
+                       type: :textarea,
+                       placeholder: "Describe your tour - what will travelers experience?",
+                       rows: 5,
+                       required: true %>
+          </div>
+
+          <!-- Tour Type -->
+          <div>
+            <h2 class="text-lg font-semibold text-foreground mb-4">Tour Type</h2>
+
+            <%= render "shared/form_field",
+                       form: f,
+                       field: :tour_type,
+                       label: "Tour Type",
+                       type: :select,
+                       options_list: Tour.tour_types.map { |k, _v| [k.titleize, k] },
+                       required: true,
+                       help_text: "Private tours can only be booked once for the full capacity before the booking deadline" %>
+
+            <div data-controller="form-visibility" data-form-visibility-watch-value="tour_tour_type" data-form-visibility-show-on-value="private_tour">
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :booking_deadline_hours,
+                         label: "Booking Deadline (Private Tours Only)",
+                         type: :select,
+                         options_list: Tour::BOOKING_DEADLINE_OPTIONS.map { |hours| ["#{hours} #{'hour'.pluralize(hours)} before tour start", hours] },
+                         help_text: "How many hours before the tour starts should bookings close?",
+                         required: true %>
+            </div>
+          </div>
+
+          <!-- Location & Schedule -->
+          <div>
+            <h2 class="text-lg font-semibold text-foreground mb-4">Location & Schedule</h2>
+
+            <%= render "shared/form_field",
+                       form: f,
+                       field: :location_name,
+                       label: "Location",
+                       type: :text,
+                       placeholder: "e.g., Mount Rocky Trail, Colorado",
+                       required: true %>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :latitude,
+                         label: "Latitude",
+                         type: :text,
+                         placeholder: "e.g., 39.3434",
+                         required: true %>
+
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :longitude,
+                         label: "Longitude",
+                         type: :text,
+                         placeholder: "e.g., -104.8202",
+                         required: true %>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :starts_at,
+                         label: "Tour Start Date & Time",
+                         type: :text,
+                         required: true,
+                         extra_attributes: { type: "datetime-local" } %>
+
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :ends_at,
+                         label: "Tour End Date & Time",
+                         type: :text,
+                         required: true,
+                         extra_attributes: { type: "datetime-local" } %>
+            </div>
+          </div>
+
+          <!-- Capacity & Pricing -->
+          <div>
+            <h2 class="text-lg font-semibold text-foreground mb-4">Capacity & Pricing</h2>
+
+            <%= render "shared/form_field",
+                       form: f,
+                       field: :capacity,
+                       label: "Maximum Participants",
+                       type: :text,
+                       placeholder: "e.g., 10",
+                       required: true,
+                       help_text: "The maximum number of people who can participate in this tour",
+                       extra_attributes: { type: "number", min: 1 } %>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :price_cents,
+                         label: "Price (in cents)",
+                         type: :text,
+                         placeholder: "e.g., 10000 for $100.00",
+                         help_text: "Leave empty for free tours",
+                         extra_attributes: { type: "number", min: 0 } %>
+
+              <%= render "shared/form_field",
+                         form: f,
+                         field: :currency,
+                         label: "Currency",
+                         type: :text,
+                         placeholder: "USD",
+                         required: true,
+                         help_text: "Currency code (e.g., USD, EUR, GBP)" %>
+            </div>
+          </div>
+
+          <!-- Media -->
+          <div>
+            <h2 class="text-lg font-semibold text-foreground mb-4">Media</h2>
+
+            <!-- Current Cover Image -->
+            <% if @tour.cover_image.attached? %>
+              <div class="mb-4">
+                <label class="form-label">Current Cover Image</label>
+                <div class="relative inline-block">
+                  <%= image_tag @tour.cover_image.variant(resize_to_limit: [400, 300]), class: "rounded-lg shadow-sm" %>
+                  <button type="button" class="absolute top-2 right-2 bg-destructive text-destructive-foreground px-3 py-1 rounded text-sm" data-action="click->image-upload#clearPreviews">Remove</button>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Cover Image Upload -->
+            <div class="mb-6" data-controller="image-upload" data-image-upload-max-size-value="<%= 5 * 1024 * 1024 %>">
+              <label class="form-label">Cover Image <%= "*" unless @tour.cover_image.attached? %></label>
+              <p class="text-sm text-muted-foreground mb-3">Upload a <%= "new " if @tour.cover_image.attached? %>cover image for your tour (PNG, JPEG, or WEBP, max 5MB)</p>
+
+              <div class="image-dropzone" data-image-upload-target="dropzone" data-action="click->image-upload#triggerFileSelect">
+                <svg class="mx-auto h-12 w-12 text-muted-foreground" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <p class="text-sm text-muted-foreground">Click to upload or drag and drop</p>
+              </div>
+
+              <%= f.file_field :cover_image,
+                              accept: "image/png,image/jpeg,image/jpg,image/webp",
+                              class: "hidden",
+                              data: {
+                                image_upload_target: "input",
+                                action: "change->image-upload#handleFileSelect"
+                              } %>
+
+              <div data-image-upload-target="error" class="text-sm text-destructive mt-2 hidden"></div>
+              <div data-image-upload-target="preview" class="mt-4 grid grid-cols-1 gap-4"></div>
+              <div data-image-upload-target="fileInfo" class="text-sm text-muted-foreground mt-2"></div>
+            </div>
+
+            <!-- Current Gallery Images -->
+            <% if @tour.images.attached? && @tour.images.any? %>
+              <div class="mb-4">
+                <label class="form-label">Current Gallery Images</label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
+                  <% @tour.images.each do |image| %>
+                    <div class="relative group">
+                      <%= image_tag image.variant(resize_to_limit: [200, 150]), class: "rounded-lg shadow-sm w-full h-32 object-cover" %>
+                      <button type="button" class="absolute top-2 right-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity">Remove</button>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Gallery Images Upload -->
+            <div class="mb-6" data-controller="image-upload" data-image-upload-max-size-value="<%= 5 * 1024 * 1024 %>" data-image-upload-multiple-value="true">
+              <label class="form-label">Gallery Images (Optional)</label>
+              <p class="text-sm text-muted-foreground mb-3">Upload up to 10 additional images for your tour gallery</p>
+
+              <div class="image-dropzone" data-image-upload-target="dropzone" data-action="click->image-upload#triggerFileSelect">
+                <svg class="mx-auto h-12 w-12 text-muted-foreground" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <p class="text-sm text-muted-foreground">Click to upload or drag and drop multiple images</p>
+              </div>
+
+              <%= f.file_field :images,
+                              multiple: true,
+                              accept: "image/png,image/jpeg,image/jpg,image/webp",
+                              class: "hidden",
+                              data: {
+                                image_upload_target: "input",
+                                action: "change->image-upload#handleFileSelect"
+                              } %>
+
+              <div data-image-upload-target="error" class="text-sm text-destructive mt-2 hidden"></div>
+              <div data-image-upload-target="preview" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+              <div data-image-upload-target="fileInfo" class="text-sm text-muted-foreground mt-2"></div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions flex gap-4 pt-6 border-t border-border">
+            <%= f.submit "Update Tour", class: "btn-booking flex-1" %>
+            <%= link_to "Cancel", tour_path(@tour), class: "btn-ghost flex-1 text-center" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

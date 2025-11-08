@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Weather Alert for Your Upcoming Tour</h1>
+
+    <p>Dear <%= @guide.name %>,</p>
+
+    <p>
+      We wanted to alert you about the weather forecast for your upcoming tour
+      "<strong><%= @tour.title %></strong>".
+    </p>
+
+    <h2>Tour Details:</h2>
+    <ul>
+      <li><strong>Tour:</strong> <%= @tour.title %></li>
+      <li><strong>Date:</strong> <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %></li>
+      <li><strong>Location:</strong> <%= @tour.location_name %></li>
+    </ul>
+
+    <h2>Weather Forecast:</h2>
+    <ul>
+      <li><strong>Conditions:</strong> <%= @forecast[:description] %></li>
+      <li><strong>Temperature Range:</strong> <%= @forecast[:min_temp].round %>°C - <%= @forecast[:max_temp].round %>°C</li>
+      <% if @forecast[:pop] && @forecast[:pop] > 0 %>
+        <li><strong>Chance of Rain:</strong> <%= (@forecast[:pop] * 100).round %>%</li>
+      <% end %>
+      <% if @forecast[:wind_speed] %>
+        <li><strong>Wind Speed:</strong> <%= @forecast[:wind_speed].round %> m/s</li>
+      <% end %>
+    </ul>
+
+    <p>
+      <strong>Please consider:</strong>
+    </p>
+    <ul>
+      <li>Notifying your tour participants about the weather conditions</li>
+      <li>Advising them to bring appropriate clothing or gear</li>
+      <li>Reviewing safety protocols if conditions are challenging</li>
+    </ul>
+
+    <p>
+      Stay safe and have a great tour!
+    </p>
+
+    <p>
+      Best regards,<br/>
+      The Tour Team
+    </p>
+  </body>
+</html>

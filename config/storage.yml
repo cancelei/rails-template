@@ -5,43 +5,42 @@ test:
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
-# Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
-# amazon:
-#   service: S3
-#   upload:
-#     # TEAM DECISION REQUIRED: The correct caching duration for files
-#     # stored by Active Storage is project dependent so you should discuss
-#     # this with you team if you don't feel able to make the decision solo.
-#     #
-#     # These options are are not well documented in ActiveStorage. They
-#     # are passed directly to the S3 SDK. Details:
-#     # https://github.com/rails/rails/blob/master/activestorage/lib/active_storage/service/s3_service.rb
-#     #
-#     # * private: the browser should cache but intermediate proxies (e.g. CDNs) should not
-#     # * max-age: the number of seconds to cache the file for
-#     #
-#     cache_control: 'private, max-age=<%= 365.days.seconds %>'
 
-#   access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
-#   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
-#   region: us-east-1
-#   bucket: your_own_bucket-<%= Rails.env %>
+# iDrive e2 Storage (S3-compatible)
+# Development environment - uses local disk for faster iteration
+idrive_development:
+  service: S3
+  access_key_id: <%= ENV['IDRIVE_E2_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['IDRIVE_E2_SECRET_ACCESS_KEY'] %>
+  region: us-east-1  # iDrive e2 doesn't use regions, but AWS SDK requires it
+  bucket: <%= ENV.fetch('IDRIVE_E2_BUCKET_DEVELOPMENT', 'guide-development') %>
+  endpoint: https://s3.us-southwest-1.idrivee2.com
+  force_path_style: true  # Required for iDrive e2
+  upload:
+    # Cache files for 1 year - adjust based on your needs
+    # private: browser can cache, but CDNs should not
+    cache_control: 'private, max-age=<%= 365.days.to_i %>'
 
-# Remember not to checkin your GCS keyfile to a repository
-# google:
-#   service: GCS
-#   project: your_project
-#   credentials: <%= Rails.root.join("path/to/gcs.keyfile") %>
-#   bucket: your_own_bucket-<%= Rails.env %>
+# Staging environment
+idrive_staging:
+  service: S3
+  access_key_id: <%= ENV['IDRIVE_E2_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['IDRIVE_E2_SECRET_ACCESS_KEY'] %>
+  region: us-east-1
+  bucket: <%= ENV.fetch('IDRIVE_E2_BUCKET_STAGING', 'guide-staging') %>
+  endpoint: https://s3.us-southwest-1.idrivee2.com
+  force_path_style: true
+  upload:
+    cache_control: 'private, max-age=<%= 365.days.to_i %>'
 
-# Use bin/rails credentials:edit to set the Azure Storage secret (as azure_storage:storage_access_key)
-# microsoft:
-#   service: AzureStorage
-#   storage_account_name: your_account_name
-#   storage_access_key: <%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>
-#   container: your_container_name-<%= Rails.env %>
-
-# mirror:
-#   service: Mirror
-#   primary: local
-#   mirrors: [ amazon, google, microsoft ]
+# Production environment
+idrive_production:
+  service: S3
+  access_key_id: <%= ENV['IDRIVE_E2_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['IDRIVE_E2_SECRET_ACCESS_KEY'] %>
+  region: us-east-1
+  bucket: <%= ENV.fetch('IDRIVE_E2_BUCKET_PRODUCTION', 'guide-production') %>
+  endpoint: https://s3.us-southwest-1.idrivee2.com
+  force_path_style: true
+  upload:
+    cache_control: 'public, max-age=<%= 365.days.to_i %>'  # public for better CDN caching

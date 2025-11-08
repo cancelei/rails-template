@@ -1,0 +1,11 @@
+<%# locals: (comment:, is_liked:) %>
+<%= button_to toggle_like_comment_path(comment, format: :turbo_stream),
+              class: "flex items-center gap-1 text-sm #{is_liked ? "text-primary" : "text-muted-foreground"} hover:text-primary transition-colors cursor-pointer border-0 bg-transparent p-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded",
+              aria: { label: "Like this comment", pressed: is_liked },
+              title: is_liked ? "Unlike" : "Like",
+              form_class: "inline-block" do %>
+  <span class="inline-block transition-transform hover:scale-110">
+    <%= is_liked ? "❤️" : "🤍" %>
+  </span>
+  <span><%= comment.likes_count || 0 %></span>
+<% end %>

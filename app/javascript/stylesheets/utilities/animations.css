@@ -1,0 +1,344 @@
+@layer utilities {
+  /* ============================================
+     Micro-interactions & Animations
+     ============================================ */
+
+  /* Gentle bounce animation for attention-grabbing elements */
+  .animate-bounce-gentle {
+    animation: bounce-gentle 2s infinite;
+  }
+
+  /* Slow pulse for limited availability */
+  .animate-pulse-slow {
+    animation: pulse-slow 3s infinite;
+  }
+
+  /* Shimmer effect for loading states */
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transform transition-transform duration-200 hover:scale-105;
+  }
+
+  /* Hover glow effect */
+  .hover-glow {
+    @apply transition-shadow duration-200 hover:shadow-lg;
+  }
+
+  /* Hover scale with shadow */
+  .hover-scale {
+    @apply transform transition-all duration-200 hover:scale-105 hover:shadow-xl;
+  }
+
+  /* Fade in animation */
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  /* Slide up animation */
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  /* Slide down animation */
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+
+  /* Scale in animation */
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+
+  /* Wiggle animation for errors */
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  /* Success checkmark animation */
+  .animate-checkmark {
+    animation: checkmark 0.6s ease-in-out;
+  }
+
+  /* Loading spinner */
+  .animate-spin-slow {
+    animation: spin 2s linear infinite;
+  }
+
+  /* Flash update animation for real-time updates */
+  .animate-flash-update {
+    animation: flash-update 1s ease-in-out;
+  }
+
+  /* ============================================
+     Keyframe Animations
+     ============================================ */
+
+  @keyframes bounce-gentle {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes checkmark {
+    0% {
+      transform: scale(0) rotate(45deg);
+    }
+    50% {
+      transform: scale(1.2) rotate(45deg);
+    }
+    100% {
+      transform: scale(1) rotate(45deg);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes flash-update {
+    0% {
+      background-color: rgba(59, 130, 246, 0.15);
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    50% {
+      background-color: rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.2);
+    }
+    100% {
+      background-color: transparent;
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }
+
+  /* ============================================
+     Transition Utilities
+     ============================================ */
+
+  .transition-all-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .transition-colors-smooth {
+    @apply transition-colors duration-200 ease-in-out;
+  }
+
+  .transition-transform-smooth {
+    @apply transition-transform duration-200 ease-in-out;
+  }
+
+  .transition-shadow-smooth {
+    @apply transition-shadow duration-200 ease-in-out;
+  }
+
+  /* ============================================
+     Hover Effects
+     ============================================ */
+
+  .hover-brighten {
+    @apply transition-all duration-200 hover:brightness-110;
+  }
+
+  .hover-darken {
+    @apply transition-all duration-200 hover:brightness-90;
+  }
+
+  .hover-saturate {
+    @apply transition-all duration-200 hover:saturate-150;
+  }
+
+  .hover-rotate {
+    @apply transition-transform duration-200 hover:rotate-3;
+  }
+
+  .hover-tilt {
+    @apply transition-transform duration-200 hover:rotate-1 hover:scale-105;
+  }
+
+  /* ============================================
+     Focus Effects
+     ============================================ */
+
+  .focus-ring-orange {
+    @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
+  }
+
+  .focus-ring-teal {
+    @apply focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+  }
+
+  .focus-ring-emerald {
+    @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+  }
+
+  /* ============================================
+     Loading States
+     ============================================ */
+
+  .loading-skeleton {
+    @apply bg-slate-200 animate-pulse rounded;
+  }
+
+  .loading-dots {
+    @apply inline-flex space-x-1;
+  }
+
+  .loading-dots > div {
+    @apply w-2 h-2 bg-current rounded-full animate-pulse;
+  }
+
+  .loading-dots > div:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .loading-dots > div:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  .loading-dots > div:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  /* ============================================
+     Stagger Animations
+     ============================================ */
+
+  .stagger-1 {
+    animation-delay: 0.1s;
+  }
+
+  .stagger-2 {
+    animation-delay: 0.2s;
+  }
+
+  .stagger-3 {
+    animation-delay: 0.3s;
+  }
+
+  .stagger-4 {
+    animation-delay: 0.4s;
+  }
+
+  .stagger-5 {
+    animation-delay: 0.5s;
+  }
+
+  /* ============================================
+     Accessibility
+     ============================================ */
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-bounce-gentle,
+    .animate-pulse-slow,
+    .animate-shimmer,
+    .animate-fade-in,
+    .animate-slide-up,
+    .animate-slide-down,
+    .animate-scale-in,
+    .animate-wiggle,
+    .animate-checkmark,
+    .animate-spin-slow {
+      animation: none;
+    }
+
+    .hover-lift:hover,
+    .hover-scale:hover,
+    .hover-rotate:hover,
+    .hover-tilt:hover {
+      transform: none;
+    }
+  }
+}

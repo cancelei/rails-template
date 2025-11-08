@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "./custom-utilities.css";
+@import "./_reset.css";
+@import "./_elements.css";
+@import "./theme.css";
+@import "./components-all.css";
+@import "./utilities/animations.css";

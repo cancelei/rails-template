@@ -4,3 +4,4 @@ coverage/
 public/
 vendor/
 tmp/
+app/assets/builds/

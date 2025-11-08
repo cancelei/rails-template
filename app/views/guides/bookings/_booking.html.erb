@@ -1,0 +1,39 @@
+<%# locals: (booking:) %>
+<%= turbo_frame_tag dom_id(booking), target: "_top" do %>
+<tr id="<%= dom_id(booking) %>_row">
+  <td class="px-6 py-4">
+    <div class="text-sm font-medium text-foreground"><%= booking.user.name %></div>
+    <div class="text-sm text-muted-foreground"><%= booking.user.email %></div>
+  </td>
+  <td class="px-6 py-4">
+    <div class="text-sm text-foreground"><%= booking.tour.title %></div>
+    <div class="text-sm text-muted-foreground">
+      <%= booking.tour.starts_at.strftime("%b %d, %Y at %I:%M %p") %>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <span class="<%= status_badge_classes(booking.status) %>">
+      <%= format_status(booking.status) %>
+    </span>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+    <%= booking.created_at.strftime("%b %d, %Y") %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <div class="flex items-center justify-end gap-2">
+      <%= link_to "Edit",
+                  edit_guides_booking_path(booking),
+                  class: "text-primary hover:text-primary/80 font-medium",
+                  data: { turbo_frame: dom_id(booking), action: "click->loading-state#showLoading" } %>
+
+      <% if booking.status != "cancelled" %>
+        <%= button_to "Cancel",
+                      cancel_guides_booking_path(booking),
+                      method: :patch,
+                      form: { data: { turbo_confirm: "Are you sure you want to cancel this booking?" } },
+                      class: "text-danger hover:text-danger/80 font-medium" %>
+      <% end %>
+    </div>
+  </td>
+</tr>
+<% end %>

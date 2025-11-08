@@ -1,16 +1,26 @@
-<h2>Forgot your password?</h2>
+<% provide(:title, "Forgot Password") %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "users/shared/error_messages", resource: %>
+<%= render "shared/auth_layout", title: "Forgot Password?", description: "Enter your email address and we'll send you instructions to reset your password." do %>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-6", data: { controller: "form_validation loading_state", loading_state_loading_text: "Sending reset instructions..." } }) do |f| %>
+    <% if resource.errors.any? %>
+      <div class="alert alert-danger">
+        <h4 class="font-semibold mb-2"><%= pluralize(resource.errors.count, "error") %> prevented this request:</h4>
+        <ul class="text-sm list-disc list-inside">
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <div class="form-group">
+      <%= f.label :email, class: "form-label form-label-required" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input",
+                                placeholder: "your@email.com", required: true %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
+    <div>
+      <%= f.submit "Send Reset Instructions", class: "btn-booking w-full" %>
+    </div>
+  <% end %>
 <% end %>
-
-<%= render "users/shared/links" %>

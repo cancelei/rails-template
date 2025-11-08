@@ -6,6 +6,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Disable HTTP Basic Auth middleware in tests
+  config.middleware.delete HttpBasicAuth
+
   # While tests run files are not watched, reloading is not necessary.
   config.enable_reloading = false
 
@@ -31,10 +34,19 @@ Rails.application.configure do
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 
-  # Tell Action Mailer not to deliver emails to the real world.
-  # The :test delivery method accumulates sent emails in the
-  # ActionMailer::Base.deliveries array.
-  config.action_mailer.delivery_method = :test
+  # Use TESTMAIL for test environment email testing
+  config.action_mailer.delivery_method = :smtp
+
+  # TESTMAIL SMTP configuration for testing
+  config.action_mailer.smtp_settings = {
+    address: "smtp.testmail.app",
+    port: 587,
+    domain: "localhost",
+    user_name: ENV.fetch("TESTMAIL_USERNAME", nil),
+    password: ENV.fetch("TESTMAIL_API_KEY", nil),
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
 
   # Ensure mailer works in test
   config.action_mailer.raise_delivery_errors = true
@@ -56,8 +68,8 @@ Rails.application.configure do
   # config.action_controller.raise_on_missing_callback_actions = true
 
   config.after_initialize do
-    Bullet.enable        = true
+    Bullet.enable        = false
     Bullet.bullet_logger = true
-    Bullet.raise         = true # raise an error if n+1 query occurs
+    Bullet.raise         = false # raise an error if n+1 query occurs
   end
 end

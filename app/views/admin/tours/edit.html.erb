@@ -1,0 +1,14 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-foreground">Edit Tour</h1>
+      <%= link_to "Back to Tours", admin_tours_path, class: "btn-booking-secondary" %>
+    </div>
+
+    <%= render "shared/tour_inline_edit_form",
+               tour: @tour,
+               form_url: admin_tour_path(@tour),
+               cancel_url: admin_tours_path,
+               show_advanced_fields: true %>
+  </div>
+</div>

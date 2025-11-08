@@ -156,10 +156,6 @@ bundle exec sidekiq
 
 ### Running the tests
 
-    TODO: Describe how to run the project's test suite. Are there any other
-          tests that a new dev should know about? Performance tests?
-          Include all testing info in this section.
-
 ```bash
 # run all specs
 bundle exec rspec spec
@@ -171,6 +167,37 @@ HEADFUL=1 bundle exec rspec spec/features
 # run lighthouse specs
 npm run lighthouse-spec
 ```
+
+For detailed information about the testing infrastructure, factories, and patterns, see [TESTING_GUIDE.md](TESTING_GUIDE.md).
+
+### Code Quality & Linting
+
+This project uses multiple linters to maintain code quality:
+
+```bash
+# Run all linters (check mode)
+./bin/lint
+
+# Run all linters with auto-fix
+./bin/lint --fix
+
+# Run specific linter
+./bin/lint --only rubocop    # Ruby
+./bin/lint --only erb_lint   # ERB templates
+./bin/lint --only eslint     # JavaScript
+./bin/lint --only stylelint  # CSS
+
+# Show help
+./bin/lint --help
+```
+
+The unified linter runs:
+- **RuboCop** - Ruby code style and quality
+- **ERB Lint** - ERB template linting
+- **ESLint** - JavaScript code style and quality
+- **Stylelint** - CSS/SCSS code style and quality
+
+For detailed information about linting configuration and usage, see [LINTING_GUIDE.md](LINTING_GUIDE.md).
 
 ### Source code annotations
 

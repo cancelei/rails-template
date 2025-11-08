@@ -1,0 +1,37 @@
+<%#
+  Guide Profile Display Partial
+  Used in public guide profile page with inline editing for admins
+-%>
+
+<% guide_profile ||= @guide_profile %>
+
+<div id="<%= dom_id(guide_profile) %>" class="card-body">
+  <div class="flex items-start justify-between mb-4">
+    <h1 class="text-3xl font-bold text-foreground"><%= guide_profile.user.name %></h1>
+    <% if can_edit?(guide_profile) %>
+      <%= link_to edit_guide_profile_path(guide_profile),
+          data: { turbo_frame: dom_id(guide_profile) },
+          class: "btn btn-sm btn-outline flex items-center gap-1",
+          title: "Edit profile" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+        <span>Edit</span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="space-y-3">
+    <p class="text-muted-foreground"><%= guide_profile.bio %></p>
+    <div class="flex flex-wrap gap-4 text-sm">
+      <div>
+        <span class="text-muted-foreground">Languages:</span>
+        <span class="font-semibold text-foreground"><%= guide_profile.languages %></span>
+      </div>
+      <div>
+        <span class="text-muted-foreground">Rating:</span>
+        <span class="font-semibold text-foreground"><%= guide_profile.rating_cached || 'No ratings yet' %></span>
+      </div>
+    </div>
+  </div>
+</div>

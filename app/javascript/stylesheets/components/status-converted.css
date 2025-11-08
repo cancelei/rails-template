@@ -1,0 +1,497 @@
+/* ============================================
+   Status Badge System (No @apply)
+   ============================================ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+}
+
+.status-available {
+  background-color: rgb(209 250 229);
+  color: rgb(6 95 70);
+  border: 1px solid rgb(167 243 208);
+}
+
+.status-limited {
+  background-color: rgb(254 243 199);
+  color: rgb(146 64 14);
+  border: 1px solid rgb(254 215 170);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.status-sold-out {
+  background-color: rgb(241 245 249);
+  color: rgb(71 85 105);
+  border: 1px solid rgb(226 232 240);
+}
+
+.status-trending {
+  background-color: rgb(252 231 243);
+  color: rgb(157 23 77);
+  border: 1px solid rgb(249 168 212);
+}
+
+.status-weather-warning {
+  background-color: rgb(254 226 226);
+  color: rgb(153 27 27);
+  border: 1px solid rgb(254 205 211);
+}
+
+.status-confirmed {
+  background-color: rgb(209 250 229);
+  color: rgb(6 95 70);
+  border: 1px solid rgb(167 243 208);
+}
+
+.status-pending {
+  background-color: rgb(254 243 199);
+  color: rgb(146 64 14);
+  border: 1px solid rgb(254 215 170);
+}
+
+.status-cancelled {
+  background-color: rgb(254 226 226);
+  color: rgb(153 27 27);
+  border: 1px solid rgb(254 205 211);
+}
+
+.status-completed {
+  background-color: rgb(241 245 249);
+  color: rgb(71 85 105);
+  border: 1px solid rgb(226 232 240);
+}
+
+/* ============================================
+   Availability Indicators (No @apply)
+   ============================================ */
+
+.availability-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.availability-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.availability-dot.high {
+  background-color: rgb(16 185 129);
+}
+
+.availability-dot.medium {
+  background-color: rgb(245 158 11);
+}
+
+.availability-dot.low {
+  background-color: rgb(239 68 68);
+}
+
+.availability-dot.sold-out {
+  background-color: rgb(148 163 184);
+}
+
+.availability-text {
+  color: rgb(51 65 85);
+}
+
+.availability-text.high {
+  color: rgb(5 150 105);
+}
+
+.availability-text.medium {
+  color: rgb(217 119 6);
+}
+
+.availability-text.low {
+  color: rgb(220 38 38);
+}
+
+.availability-text.sold-out {
+  color: rgb(100 116 139);
+}
+
+/* ============================================
+   Progress Indicators (No @apply)
+   ============================================ */
+
+.progress-bar {
+  width: 100%;
+  background-color: rgb(226 232 240);
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+
+.progress-bar-fill {
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: all 0.5s;
+}
+
+.progress-bar-fill.booking {
+  background-color: rgb(249 115 22);
+}
+
+.progress-bar-fill.success {
+  background-color: rgb(16 185 129);
+}
+
+.progress-bar-fill.warning {
+  background-color: rgb(245 158 11);
+}
+
+.progress-bar-fill.danger {
+  background-color: rgb(239 68 68);
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(71 85 105);
+  margin-top: 0.25rem;
+}
+
+.progress-percentage {
+  font-weight: 600;
+}
+
+/* ============================================
+   Spot Indicators (No @apply)
+   ============================================ */
+
+.spot-indicator {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.spot-indicator.high {
+  color: rgb(5 150 105);
+}
+
+.spot-indicator.medium {
+  color: rgb(217 119 6);
+}
+
+.spot-indicator.low {
+  color: rgb(220 38 38);
+}
+
+.spot-indicator.sold-out {
+  color: rgb(100 116 139);
+}
+
+.spot-count {
+  font-weight: 700;
+}
+
+.spot-remaining {
+  color: rgb(100 116 139);
+}
+
+/* ============================================
+   Weather Status (No @apply)
+   ============================================ */
+
+.weather-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.weather-status-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.weather-status-icon.clear {
+  color: rgb(59 130 246);
+}
+
+.weather-status-icon.cloudy {
+  color: rgb(100 116 139);
+}
+
+.weather-status-icon.rainy {
+  color: rgb(37 99 235);
+}
+
+.weather-status-icon.stormy {
+  color: rgb(239 68 68);
+}
+
+.weather-status-text {
+  font-weight: 500;
+}
+
+.weather-status-text.clear {
+  color: rgb(29 78 216);
+}
+
+.weather-status-text.cloudy {
+  color: rgb(51 65 85);
+}
+
+.weather-status-text.rainy {
+  color: rgb(30 64 175);
+}
+
+.weather-status-text.stormy {
+  color: rgb(185 28 28);
+}
+
+.weather-warning {
+  background-color: rgb(255 251 235);
+  border: 1px solid rgb(254 215 170);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.weather-warning-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: rgb(217 119 6);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.weather-warning-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(146 64 14);
+}
+
+/* ============================================
+   Booking Status (No @apply)
+   ============================================ */
+
+.booking-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booking-status-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.booking-status-icon.confirmed {
+  color: rgb(5 150 105);
+}
+
+.booking-status-icon.pending {
+  color: rgb(217 119 6);
+}
+
+.booking-status-icon.cancelled {
+  color: rgb(220 38 38);
+}
+
+.booking-status-icon.completed {
+  color: rgb(71 85 105);
+}
+
+.booking-status-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.booking-status-text.confirmed {
+  color: rgb(4 120 87);
+}
+
+.booking-status-text.pending {
+  color: rgb(180 83 9);
+}
+
+.booking-status-text.cancelled {
+  color: rgb(185 28 28);
+}
+
+.booking-status-text.completed {
+  color: rgb(51 65 85);
+}
+
+/* ============================================
+   Rating Status (No @apply)
+   ============================================ */
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rating-star {
+  width: 1rem;
+  height: 1rem;
+}
+
+.rating-star.filled {
+  color: rgb(250 204 21);
+}
+
+.rating-star.empty {
+  color: rgb(209 213 219);
+}
+
+.rating-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(71 85 105);
+  margin-left: 0.25rem;
+}
+
+.rating-count {
+  color: rgb(100 116 139);
+}
+
+/* ============================================
+   Priority Indicators (No @apply)
+   ============================================ */
+
+.priority-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+}
+
+.priority-high {
+  background-color: rgb(254 226 226);
+  color: rgb(153 27 27);
+  border: 1px solid rgb(254 205 211);
+}
+
+.priority-medium {
+  background-color: rgb(254 243 199);
+  color: rgb(146 64 14);
+  border: 1px solid rgb(254 215 170);
+}
+
+.priority-low {
+  background-color: rgb(241 245 249);
+  color: rgb(71 85 105);
+  border: 1px solid rgb(226 232 240);
+}
+
+/* ============================================
+   Loading States (No @apply)
+   ============================================ */
+
+.status-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.status-skeleton {
+  background-color: rgb(226 232 240);
+  border-radius: 0.25rem;
+  height: 1rem;
+  width: 4rem;
+}
+
+.status-skeleton-sm {
+  background-color: rgb(226 232 240);
+  border-radius: 0.25rem;
+  height: 0.75rem;
+  width: 3rem;
+}
+
+.status-skeleton-lg {
+  background-color: rgb(226 232 240);
+  border-radius: 0.25rem;
+  height: 1.25rem;
+  width: 5rem;
+}
+
+/* ============================================
+   Interactive Status (No @apply)
+   ============================================ */
+
+.status-clickable {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.status-clickable:hover {
+  opacity: 0.8;
+}
+
+.status-tooltip {
+  position: relative;
+}
+
+.status-tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+  background-color: rgb(15 23 42);
+  color: white;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 50;
+}
+
+.status-tooltip:hover .status-tooltip-content {
+  opacity: 1;
+}
+
+.status-tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid rgb(15 23 42);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

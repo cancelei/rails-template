@@ -1,0 +1,2 @@
+module GuideProfilesHelper
+end

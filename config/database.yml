@@ -7,10 +7,13 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV["DB_POOL_SIZE"] || ENV["RAILS_MAX_THREADS"] || 5 %>
   min_messages: WARNING # https://thoughtbot.com/blog/global-min-messages
+  username: postgres
+  password:
 
 development:
   <<: *default
   database: guide_development
+  host: localhost
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -18,6 +21,7 @@ development:
 test:
   <<: *default
   database: guide_test
+  host: localhost
 
 staging:
   <<: *default

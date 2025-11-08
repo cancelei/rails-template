@@ -1,0 +1,49 @@
+<% provide(:page_title, "Tours") %>
+
+<div>
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-foreground">Tours</h1>
+      <p class="mt-1 text-sm text-muted-foreground"><%= @tours.total_count %> total tours</p>
+    </div>
+    <%= link_to "New Tour",
+                new_admin_tour_path,
+                class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white btn-booking hover:bg-opacity-90",
+                data: { turbo_frame: "modal" } %>
+  </div>
+
+  <!-- Filters -->
+  <div class="mb-6 flex flex-col sm:flex-row gap-4">
+    <%= form_with url: admin_tours_path,
+                  method: :get,
+                  data: { controller: "search", turbo_frame: "admin_content", turbo_action: "advance" },
+                  class: "flex flex-col sm:flex-row gap-4 flex-1" do |f| %>
+      <div class="flex-1">
+        <%= f.text_field :q,
+                         value: params[:q],
+                         placeholder: "Search tours...",
+                         data: { action: "input->search#submit", search_target: "input" },
+                         class: "shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-border rounded-md" %>
+      </div>
+      <div class="sm:w-48">
+        <%= f.select :status,
+                     options_for_select([["All Statuses", ""], ["Scheduled", "scheduled"], ["In Progress", "in_progress"], ["Completed", "completed"], ["Cancelled", "cancelled"]], params[:status]),
+                     {},
+                     class: "shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-border rounded-md",
+                     data: { action: "change->search#submit" } %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Tours Table -->
+  <%= render "shared/admin_table", columns: ["Title", "Guide", "Status", "Starts At", "Price", "Actions"] do %>
+    <tbody id="tours_table_body" class="bg-card divide-y divide-border">
+      <%= render @tours %>
+    </tbody>
+  <% end %>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    <%== pagy_nav(@pagy) if defined?(@pagy) %>
+  </div>
+</div>

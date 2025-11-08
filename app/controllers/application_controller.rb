@@ -9,7 +9,14 @@ class ApplicationController < ActionController::Base
   # Opera 106+ which is too aggressive for us.
   # allow_browser versions: :modern
 
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   private
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  end
 
   def user_not_authorized
     # This application uses the Rails default of increasing numeric IDs for

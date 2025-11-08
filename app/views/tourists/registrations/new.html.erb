@@ -1,0 +1,26 @@
+<% provide(:title, "Sign up as Tourist") %>
+
+<%= render "shared/auth_layout", title: "Join as a Tourist", description: "Discover and book amazing tours" do %>
+  <%= form_for(resource, as: resource_name, url: tourist_registration_path, html: { class: "space-y-6", data: { controller: "form_validation loading_state", loading_state_loading_text: "Creating your account..." } }) do |f| %>
+    <%= render "shared/registrations/errors", resource: %>
+
+    <%= render "shared/registrations/name_field", f: %>
+    <%= render "shared/registrations/email_field", f: %>
+    <%= render "shared/registrations/password_fields", f: %>
+
+    <div class="pt-2">
+      <%= f.submit "Create Tourist Account", class: "btn-booking w-full" %>
+    </div>
+
+    <div class="text-center text-sm text-muted-foreground">
+      <p>
+        Are you a tour guide?
+        <%= link_to "Sign up as a guide", new_guide_registration_path, class: "text-primary hover:text-primary/80 font-medium" %>
+      </p>
+      <p class="mt-2">
+        Already have an account?
+        <%= link_to "Sign in", new_user_session_path, class: "text-primary hover:text-primary/80 font-medium" %>
+      </p>
+    </div>
+  <% end %>
+<% end %>

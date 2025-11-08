@@ -41,6 +41,9 @@ end
 Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
 
+  # Point to chromium binary
+  options.binary = "/usr/bin/chromium-browser" if File.exist?("/usr/bin/chromium-browser")
+
   options.add_argument("--window-size=1920,1080")
 
   # Add other Chrome arguments here
@@ -68,6 +71,15 @@ RSpec.configure do |config|
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
+
+  # Allow exceptions to be raised in request specs for authorization testing
+  # Only enable this for specs that explicitly test exception handling
+  config.around(:each, :raise_exceptions) do |example|
+    original_value = Rails.application.env_config["action_dispatch.show_exceptions"]
+    Rails.application.env_config["action_dispatch.show_exceptions"] = :none
+    example.run
+    Rails.application.env_config["action_dispatch.show_exceptions"] = original_value
+  end
 
   # Run system tests in rack_test by default
   config.before(:each, type: :system) do
@@ -100,4 +112,5 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include ActionView::RecordIdentifier, type: :system
 end

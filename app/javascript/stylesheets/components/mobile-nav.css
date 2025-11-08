@@ -1,0 +1,69 @@
+/* ============================================
+   Mobile Navigation Component
+   ============================================ */
+
+/* Mobile nav menu states */
+.mobile-nav-menu {
+  /* Base styles - controlled by Stimulus controller via Tailwind classes */
+}
+
+.mobile-nav-menu[data-state="open"] {
+  /* Open state - controlled by Stimulus controller via Tailwind classes */
+}
+
+/* Mobile nav panel animations */
+.mobile-nav-panel {
+  /* Transform controlled by Stimulus controller via Tailwind classes */
+}
+
+.mobile-nav-menu[data-state="open"] .mobile-nav-panel {
+  /* Open state - controlled by Stimulus controller via Tailwind classes */
+}
+
+/* Backdrop animations */
+.mobile-nav-backdrop {
+  /* Opacity controlled by Stimulus controller via Tailwind classes */
+}
+
+.mobile-nav-menu[data-state="open"] .mobile-nav-backdrop {
+  /* Open state - controlled by Stimulus controller via Tailwind classes */
+}
+
+/* Mobile nav link styles */
+.mobile-nav-link {
+  font-size: 1rem;
+  line-height: 1.5;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+/* Focus states for accessibility */
+.mobile-nav-toggle:focus,
+.mobile-nav-close:focus,
+.mobile-nav-link:focus {
+  outline: 2px solid rgb(var(--ring));
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mobile-nav-backdrop {
+    background-color: rgb(0 0 0 / 0.8);
+  }
+
+  .mobile-nav-panel {
+    border-left: 2px solid rgb(var(--border));
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav-panel {
+    transition: none;
+  }
+
+  .mobile-nav-backdrop {
+    transition: none;
+  }
+}

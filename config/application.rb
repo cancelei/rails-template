@@ -30,7 +30,7 @@ module Guide
     config.app = config_for(:app)
 
     # pull the secret_key_base from our app config
-    config.secret_key_base = config.app.secret_key_base
+    config.secret_key_base = config.app&.secret_key_base || Rails.application.credentials.secret_key_base || "development_secret_key_base"
 
     config.middleware.insert_before Rack::Sendfile, HttpBasicAuth
     config.action_dispatch.default_headers["Permissions-Policy"] = "interest-cohort=()"
@@ -51,5 +51,8 @@ module Guide
                           else
                             Logger.new("log/audit.log", formatter: AuditLogLogFormatter.new)
                           end
+
+    # Configure Propshaft for asset handling
+    config.assets.enabled = true
   end
 end

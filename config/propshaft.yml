@@ -1,0 +1,17 @@
+default: &default
+  assets:
+    prefix: '/assets'
+    paths:
+      - app/assets/images
+      - app/assets/stylesheets
+      - app/assets/javascripts
+      - app/assets/builds
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

@@ -1,0 +1,285 @@
+/* Add-ons Components */
+
+/* Add-on Preview Card (used on tour detail page) */
+.addon-preview-card {
+  padding: 0.75rem;
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.5rem;
+  background-color: rgb(255 255 255);
+  transition: all 0.15s ease-in-out;
+}
+
+.addon-preview-card:hover {
+  border-color: rgb(209 213 219);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Add-on Selector Card (used in booking form with checkboxes) */
+.addon-selector-card {
+  padding: 0.75rem;
+  border: 2px solid rgb(229 231 235);
+  border-radius: 0.5rem;
+  background-color: rgb(255 255 255);
+  transition: all 0.15s ease-in-out;
+}
+
+.addon-selector-card:hover {
+  border-color: rgb(209 213 219);
+  background-color: rgb(249 250 251);
+}
+
+.addon-selector-card:has(input[type="checkbox"]:checked) {
+  border-color: var(--color-primary);
+  background-color: rgb(239 246 255);
+}
+
+.addon-selector-card:has(input[type="checkbox"]:focus) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Booking Form Components */
+.booking-form {
+  position: sticky;
+  top: 1rem;
+}
+
+.booking-form-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgb(229 231 235);
+}
+
+.booking-form-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin-bottom: 0.5rem;
+}
+
+.booking-form-price {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.booking-form-availability {
+  margin-top: 0.5rem;
+}
+
+.availability-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.availability-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.availability-dot.high {
+  background-color: rgb(34 197 94);
+}
+
+.availability-dot.medium {
+  background-color: rgb(234 179 8);
+}
+
+.availability-dot.sold-out {
+  background-color: rgb(239 68 68);
+}
+
+.availability-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.availability-text.high {
+  color: rgb(22 163 74);
+}
+
+.availability-text.medium {
+  color: rgb(202 138 4);
+}
+
+.availability-text.sold-out {
+  color: rgb(220 38 38);
+}
+
+.booking-form-spots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booking-form-spots-input {
+  flex: 1;
+}
+
+.booking-form-spots-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-muted-foreground);
+  font-weight: 500;
+}
+
+.booking-form-total {
+  border-top: 1px solid rgb(229 231 235);
+  padding: 1rem 0;
+  margin-top: 1rem;
+}
+
+.booking-form-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.booking-form-total-row.total {
+  border-top: 1px solid rgb(229 231 235);
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
+
+/* Weather Card Components */
+.weather-card {
+  border: 1px solid rgb(209 213 219);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: rgb(255 255 255);
+}
+
+.weather-card-warning {
+  border-color: rgb(251 191 36);
+  background-color: rgb(254 252 232);
+}
+
+.weather-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.weather-card-title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.weather-status-icon {
+  display: flex;
+  align-items: center;
+}
+
+.weather-card-temp {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: var(--color-foreground);
+  margin-top: 0.5rem;
+}
+
+.weather-card-description {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-muted-foreground);
+  text-transform: capitalize;
+}
+
+.weather-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background-color: rgb(254 252 232);
+  border: 1px solid rgb(251 191 36);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+}
+
+.weather-warning-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: rgb(245 158 11);
+}
+
+.weather-warning-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(146 64 14);
+}
+
+/* Booking Buttons */
+.btn-booking {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: rgb(255 255 255);
+  background-color: rgb(var(--booking)) !important;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  min-height: 44px;
+}
+
+.btn-booking:hover:not(:disabled) {
+  background-color: rgb(var(--booking-hover)) !important;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.btn-booking:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-booking:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-booking-secondary {
+  background-color: rgb(71 85 105) !important;
+  color: rgb(255 255 255) !important;
+}
+
+.btn-booking-secondary:hover:not(:disabled) {
+  background-color: rgb(51 65 85) !important;
+}
+
+.btn-booking-ghost {
+  background-color: transparent !important;
+  color: rgb(var(--booking)) !important;
+  border: 2px solid rgb(var(--booking));
+}
+
+.btn-booking-ghost:hover:not(:disabled) {
+  background-color: rgb(239 246 255) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .booking-form {
+    position: static;
+  }
+}

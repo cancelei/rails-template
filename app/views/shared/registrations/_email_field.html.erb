@@ -1,0 +1,10 @@
+<%# locals: (f:) %>
+<div class="form-group">
+  <%= f.label :email, class: "form-label form-label-required" %>
+  <%= f.email_field :email,
+                    autocomplete: "email",
+                    class: "form-input",
+                    placeholder: "your@email.com",
+                    required: true,
+                    value: f.object.email %>
+</div>

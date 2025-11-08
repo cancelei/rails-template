@@ -1,0 +1,358 @@
+/* Image Upload Components */
+
+/* Hidden file input */
+input[type="file"].hidden,
+input[type="file"][data-image-upload-target="input"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Dropzone */
+.image-dropzone {
+  border: 2px dashed rgb(var(--border));
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.image-dropzone:hover {
+  border-color: rgb(var(--primary));
+  background-color: rgb(var(--accent) / 0.1);
+}
+
+.image-dropzone.dragover {
+  border-color: rgb(var(--primary));
+  background-color: rgb(var(--primary) / 0.1);
+}
+
+/* Image Preview Container */
+.image-preview-container {
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: rgb(var(--muted));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.image-preview-thumbnail {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.image-preview-filename {
+  font-size: 0.875rem;
+  color: rgb(var(--muted-foreground));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+  padding: 0 0.5rem;
+}
+
+.image-preview-remove {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-color: rgb(var(--danger));
+  color: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  transition: all 0.2s;
+  opacity: 0;
+}
+
+.image-preview-remove:hover {
+  background-color: rgb(var(--danger) / 0.9);
+}
+
+.image-preview-container:hover .image-preview-remove {
+  opacity: 1;
+}
+
+/* Image Gallery (for tour show page) */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .image-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .image-gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.image-gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+  background-color: rgb(var(--muted));
+}
+
+.image-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.image-gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+.image-gallery-item-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.image-gallery-item:hover .image-gallery-item-overlay {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.image-gallery-item-icon {
+  color: white;
+  width: 3rem;
+  height: 3rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.image-gallery-item:hover .image-gallery-item-icon {
+  opacity: 1;
+}
+
+/* Image Gallery Modal/Lightbox */
+.image-gallery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(4px);
+}
+
+.image-gallery-modal.hidden {
+  display: none;
+}
+
+.image-gallery-modal-content {
+  position: relative;
+  max-width: 80rem;
+  max-height: 100vh;
+  padding: 1rem;
+}
+
+.image-gallery-modal-image {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  transition: opacity 0.15s;
+}
+
+.image-gallery-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.image-gallery-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.image-gallery-modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.image-gallery-modal-nav:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.image-gallery-modal-nav-prev {
+  left: 1rem;
+}
+
+.image-gallery-modal-nav-next {
+  right: 1rem;
+}
+
+.image-gallery-modal-caption {
+  text-align: center;
+  color: white;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+/* Image Cropper */
+.image-cropper-container {
+  position: relative;
+  background-color: rgb(var(--muted));
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.image-cropper-preview {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.image-cropper-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.image-cropper-button {
+  /* Will use btn-ghost class from buttons.css */
+  font-size: 0.875rem;
+}
+
+/* Upload Progress */
+.upload-progress-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgb(var(--muted));
+  border-radius: 0.5rem;
+}
+
+.upload-progress-bar-wrapper {
+  width: 100%;
+  background-color: rgb(var(--muted-foreground) / 0.2);
+  border-radius: 9999px;
+  height: 0.5rem;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background-color: rgb(var(--primary));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-progress-text {
+  font-size: 0.875rem;
+  color: rgb(var(--muted-foreground));
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Avatar Upload (circular) */
+.avatar-upload-preview {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: rgb(var(--muted));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-upload-dropzone {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 9999px;
+  border: 2px dashed rgb(var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.avatar-upload-dropzone:hover {
+  border-color: rgb(var(--primary));
+  background-color: rgb(var(--accent) / 0.1);
+}
+
+/* Drag and Drop States */
+.dragging {
+  opacity: 0.5;
+}
+
+.drag-over {
+  box-shadow: 0 0 0 2px rgb(var(--primary));
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .image-preview-thumbnail {
+    height: 8rem;
+  }
+
+  .image-gallery-modal-nav {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .image-gallery-modal-close {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}

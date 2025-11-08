@@ -1,0 +1,265 @@
+/* ============================================
+   CSS Variables - Light Theme
+   ============================================ */
+:root {
+  /* Base colors */
+  --background: 250 250 249; /* stone-50 */
+  --foreground: 15 23 42; /* slate-900 */
+  --muted: 243 244 246; /* gray-100 */
+  --muted-foreground: 113 113 122; /* zinc-500 */
+  --card: 255 255 255; /* white */
+  --card-foreground: 15 23 42;
+  --border: 228 228 231; /* zinc-200 */
+  --input: 228 228 231; /* zinc-200 */
+  --ring: 13 148 136; /* teal-600 */
+
+  /* Brand colors - Enhanced for engagement */
+  --primary: 13 148 136; /* teal-600 - trust & reliability */
+  --primary-foreground: 255 255 255;
+  --secondary: 249 115 22; /* orange-500 - action & urgency */
+  --secondary-foreground: 255 255 255;
+  --accent: 5 150 105; /* emerald-600 - success & confirmation */
+  --accent-foreground: 255 255 255;
+
+  /* Engagement colors */
+  --booking: 249 115 22; /* orange-500 - primary booking actions */
+  --booking-foreground: 255 255 255;
+  --booking-hover: 234 88 12; /* orange-600 */
+  --success: 5 150 105; /* emerald-600 - success states */
+  --success-foreground: 255 255 255;
+  --warning: 245 158 11; /* amber-500 - warnings & limited availability */
+  --warning-foreground: 255 255 255;
+  --danger: 220 38 38; /* red-600 - destructive actions */
+  --danger-foreground: 255 255 255;
+  --info: 59 130 246; /* blue-500 - information */
+  --info-foreground: 255 255 255;
+
+  /* Status colors for availability */
+  --available: 5 150 105; /* emerald-600 */
+  --limited: 245 158 11; /* amber-500 */
+  --sold-out: 107 114 128; /* gray-500 */
+  --trending: 236 72 153; /* pink-500 */
+
+  /* Shadows */
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-2: 0 4px 10px rgb(0 0 0 / 0.08);
+  --shadow-3: 0 10px 25px rgb(0 0 0 / 0.1);
+
+  /* Typography */
+  --font-sans:
+    ui-sans-serif, system-ui, "Inter", "Plus Jakarta Sans", Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  --font-display: "Fraunces", "Recoleta", Georgia, serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+}
+
+/* ============================================
+   Base Styles (converted from @layer base to avoid @apply errors)
+   ============================================ */
+html {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgb(var(--primary) / 0.18);
+  color: rgb(var(--foreground));
+}
+
+/* ============================================
+   Component Layer
+   ============================================ */
+
+/* ============================================
+   Custom Utilities (outside @layer for Tailwind v4)
+   ============================================ */
+/* Custom color utilities */
+.bg-background {
+  background-color: rgb(var(--background));
+}
+
+.bg-foreground {
+  background-color: rgb(var(--foreground));
+}
+
+.bg-muted {
+  background-color: rgb(var(--muted));
+}
+
+.bg-primary {
+  background-color: rgb(var(--primary));
+}
+
+.bg-secondary {
+  background-color: rgb(var(--secondary));
+}
+
+.bg-accent {
+  background-color: rgb(var(--accent));
+}
+
+.text-background {
+  color: rgb(var(--background));
+}
+
+.text-foreground {
+  color: rgb(var(--foreground));
+}
+
+.text-muted-foreground {
+  color: rgb(var(--muted-foreground));
+}
+
+.text-primary {
+  color: rgb(var(--primary));
+}
+
+.text-primary-foreground {
+  color: rgb(var(--primary-foreground));
+}
+
+.text-secondary {
+  color: rgb(var(--secondary));
+}
+
+.text-secondary-foreground {
+  color: rgb(var(--secondary-foreground));
+}
+
+.border-border {
+  border-color: rgb(var(--border));
+}
+
+.border-input {
+  border-color: rgb(var(--input));
+}
+
+.from-primary {
+  --tw-gradient-from: rgb(var(--primary));
+  --tw-gradient-to: rgba(var(--primary), 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-secondary {
+  --tw-gradient-from: rgb(var(--secondary));
+  --tw-gradient-to: rgba(var(--secondary), 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-primary {
+  --tw-gradient-to: rgb(var(--primary));
+}
+
+.to-secondary {
+  --tw-gradient-to: rgb(var(--secondary));
+}
+
+.container-narrow {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-wide {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Text utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Scrollbar styling */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgb(var(--muted));
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgb(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--muted-foreground) / 0.5);
+}
+
+/* Animations */
+.animate-in {
+  animation: animate-in 150ms ease-out;
+}
+
+.animate-out {
+  animation: animate-out 150ms ease-in;
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes animate-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible polyfill */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    color: #000000;
+    background-color: #ffffff;
+  }
+
+  .card {
+    border: 1px solid #d1d5db;
+  }
+}

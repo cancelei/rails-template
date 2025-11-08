@@ -1,0 +1,39 @@
+<%# locals: (current_user: nil, section: 'nav') %>
+
+<% section = local_assigns.fetch(:section, "nav").to_s %>
+
+<% if section == 'auth' %>
+  <%# Desktop auth section - hidden on mobile/tablet %>
+  <div class="hidden lg:flex items-center gap-4">
+    <% auth_data = auth_navigation_data(current_user) %>
+
+    <% if auth_data[:state] == :signed_in %>
+      <span class="text-sm text-muted-foreground">
+        Signed in as <strong class="text-foreground"><%= auth_data[:email] %></strong>
+      </span>
+      <% sign_out = auth_data[:sign_out] %>
+      <%= button_to sign_out[:label],
+                    sign_out[:path],
+                    method: sign_out[:method],
+                    class: "btn btn-ghost btn-sm",
+                    aria: { label: sign_out[:aria_label] } %>
+    <% else %>
+      <% auth_data[:links].each_with_index do |link, index| %>
+        <%= link_to link[:label],
+                    link[:path],
+                    class: (index == auth_data[:links].length - 1 ? "btn btn-primary btn-sm" : "btn btn-ghost btn-sm"),
+                    aria: { label: link[:aria_label] } %>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <%# Desktop navigation links - hidden on mobile/tablet %>
+  <div class="hidden lg:flex items-center gap-6">
+    <% primary_navigation_links(current_user).each do |link| %>
+      <%= link_to link[:label],
+                  link[:path],
+                  class: "text-muted-foreground hover:text-foreground transition-colors",
+                  aria: { label: link[:aria_label] } %>
+    <% end %>
+  </div>
+<% end %>

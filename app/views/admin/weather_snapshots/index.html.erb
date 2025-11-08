@@ -1,0 +1,39 @@
+<% provide(:page_title, "Weather Snapshots") %>
+
+<div>
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-foreground">Weather Snapshots</h1>
+    <p class="mt-1 text-sm text-muted-foreground"><%= @weather_snapshots.total_count %> total snapshots</p>
+  </div>
+
+  <!-- Weather Table -->
+  <%= render "shared/admin_table", columns: %w[Tour Date Temperature Conditions Created] do %>
+    <tbody class="bg-card divide-y divide-border">
+      <% @weather_snapshots.each do |snapshot| %>
+        <tr>
+          <td class="px-4 sm:px-6 py-4">
+            <div class="text-sm font-medium text-foreground"><%= snapshot.tour.title %></div>
+            <div class="text-sm text-muted-foreground"><%= snapshot.tour.location_name %></div>
+          </td>
+          <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+            <%= snapshot.forecast_date.strftime("%b %d, %Y") %>
+          </td>
+          <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-foreground">
+            <%= snapshot.temperature_celsius %>°C
+          </td>
+          <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+            <%= snapshot.conditions %>
+          </td>
+          <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+            <%= time_ago_in_words(snapshot.created_at) %> ago
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  <% end %>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    <%== pagy_nav(@pagy) if defined?(@pagy) %>
+  </div>
+</div>

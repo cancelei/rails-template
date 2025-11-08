@@ -1,0 +1,279 @@
+<% provide(:title, "Become a Tour Guide") %>
+
+<div class="bg-white">
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden bg-gradient-to-b from-teal-500 to-teal-800 text-white">
+    <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+    <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-display mb-6 leading-tight">
+          Share Your Passion.
+          <span class="block text-teal-200">Earn on Your Terms.</span>
+        </h1>
+        <p class="text-lg sm:text-xl lg:text-2xl mb-10 text-teal-100 leading-relaxed max-w-3xl mx-auto">
+          Join thousands of local experts who are turning their knowledge into income.
+          Create tours, connect with travelers, and build your guiding business.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <%= link_to "Become a Guide", new_guide_registration_path, class: "w-full sm:w-auto btn-primary btn-lg bg-white text-teal-700 hover:bg-teal-50 px-10 py-4 text-lg font-semibold shadow-lg transition-transform transform hover:scale-105" %>
+          <a href="#how-it-works" class="w-full sm:w-auto btn-secondary btn-lg text-white border-2 border-white hover:bg-white/10 px-10 py-4 text-lg font-semibold transition-colors">
+            How It Works
+          </a>
+        </div>
+
+        <!-- Social Proof -->
+        <div class="grid grid-cols-3 gap-6 sm:gap-8 max-w-2xl mx-auto pt-8 border-t border-white/20">
+          <div class="text-center">
+            <div class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2"><%= @total_guides %>+</div>
+            <div class="text-sm sm:text-base text-teal-200">Active Guides</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2"><%= @total_tours %>+</div>
+            <div class="text-sm sm:text-base text-teal-200">Tours Created</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2"><%= number_with_precision(@average_rating, precision: 1) %></div>
+            <div class="text-sm sm:text-base text-teal-200">Avg Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-foreground mb-4">Why Guides Love Us</h2>
+        <p class="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+          We provide the tools and support to help you succeed as a tour guide.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <!-- Benefit 1 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 transform group">
+          <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-teal-500 transition-colors duration-300">
+            <svg class="w-8 h-8 text-teal-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-foreground mb-3">Flexible Pricing</h3>
+          <p class="text-muted-foreground leading-relaxed">
+            You set the price for your tours. We give you the flexibility to offer public, private, and custom-priced experiences.
+          </p>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 transform group">
+          <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+            <svg class="w-8 h-8 text-orange-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-foreground mb-3">Effortless Scheduling</h3>
+          <p class="text-muted-foreground leading-relaxed">
+            Manage your availability with our easy-to-use calendar. Set your own schedule and never worry about double bookings.
+          </p>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 transform group">
+          <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-teal-500 transition-colors duration-300">
+            <svg class="w-8 h-8 text-teal-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-foreground mb-3">Performance Insights</h3>
+          <p class="text-muted-foreground leading-relaxed">
+            A powerful dashboard provides insights into your earnings, bookings, and reviews to help you grow your business.
+          </p>
+        </div>
+
+        <!-- Benefit 4 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 transform group">
+          <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+            <svg class="w-8 h-8 text-orange-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-foreground mb-3">Build Your Reputation</h3>
+          <p class="text-muted-foreground leading-relaxed">
+            Collect reviews and ratings from happy tourists. Your profile showcases your expertise and helps you attract more bookings.
+          </p>
+        </div>
+
+        <!-- Benefit 5 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 transform group">
+          <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-teal-500 transition-colors duration-300">
+            <svg class="w-8 h-8 text-teal-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-foreground mb-3">Instant Notifications</h3>
+          <p class="text-muted-foreground leading-relaxed">
+            Get real-time notifications for new bookings, cancellations, and messages from travelers so you never miss a beat.
+          </p>
+        </div>
+
+        <!-- Benefit 6 -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 transform group">
+          <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+            <svg class="w-8 h-8 text-orange-600 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-foreground mb-3">Reach More Travelers</h3>
+          <p class="text-muted-foreground leading-relaxed">
+            Tap into a global audience of travelers. Our platform helps you market your tours and reach a wider audience.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div id="how-it-works" class="py-28 sm:py-36 bg-white scroll-mt-20">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-foreground mb-4">Getting Started is Easy</h2>
+        <p class="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+          Follow these simple steps to launch your career as a tour guide.
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto relative">
+        <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 hidden md:block"></div>
+        <div class="space-y-16 md:space-y-24">
+          <!-- Step 1 -->
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-1/2 md:pr-12 text-center md:text-right">
+              <div class="inline-block bg-gradient-to-br from-primary to-primary/80 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-lg mb-4 md:mb-0 md:ml-auto">
+                <span class="p-4">1</span>
+              </div>
+            </div>
+            <div class="md:w-1/2 md:pl-12">
+              <h3 class="text-2xl sm:text-3xl font-bold text-foreground mb-4">Create Your Profile</h3>
+              <p class="text-lg text-muted-foreground leading-relaxed">
+                Sign up in minutes and tell us about yourself. Share your expertise, languages,
+                and what makes your tours special. Add photos and build trust with potential customers.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+            <div class="md:w-1/2 md:pl-12 text-center md:text-left">
+              <div class="inline-block bg-gradient-to-br from-secondary to-secondary/80 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-lg mb-4 md:mb-0 md:mr-auto">
+                <span class="p-4">2</span>
+              </div>
+            </div>
+            <div class="md:w-1/2 md:pr-12">
+              <h3 class="text-2xl sm:text-3xl font-bold text-foreground mb-4">List Your Tours</h3>
+              <p class="text-lg text-muted-foreground leading-relaxed">
+                Create your first tour with our easy-to-use form. Set your price, schedule, capacity,
+                and location. Include weather forecasts and all the details tourists need.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-1/2 md:pr-12 text-center md:text-right">
+              <div class="inline-block bg-gradient-to-br from-primary to-primary/80 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-lg mb-4 md:mb-0 md:ml-auto">
+                <span class="p-4">3</span>
+              </div>
+            </div>
+            <div class="md:w-1/2 md:pl-12">
+              <h3 class="text-2xl sm:text-3xl font-bold text-foreground mb-4">Receive Bookings</h3>
+              <p class="text-lg text-muted-foreground leading-relaxed">
+                Watch bookings come in through your dashboard. Get instant notifications via email.
+                Manage cancellations and communicate with your guests effortlessly.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+            <div class="md:w-1/2 md:pl-12 text-center md:text-left">
+              <div class="inline-block bg-gradient-to-br from-secondary to-secondary/80 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-lg mb-4 md:mb-0 md:mr-auto">
+                <span class="p-4">4</span>
+              </div>
+            </div>
+            <div class="md:w-1/2 md:pr-12">
+              <h3 class="text-2xl sm:text-3xl font-bold text-foreground mb-4">Deliver Amazing Experiences</h3>
+              <p class="text-lg text-muted-foreground leading-relaxed">
+                Share your passion and knowledge with tourists from around the world. Collect
+                5-star reviews and watch your reputation grow. Rinse and repeat!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-24 px-4">
+        <%= link_to "Start Your Journey", new_guide_registration_path, class: "inline-block btn-primary btn-lg bg-teal-600 hover:bg-teal-700 text-white px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Grid -->
+  <div class="py-28 sm:py-36 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-foreground mb-4">Powerful Tools for Guides</h2>
+        <p class="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+          Everything you need to build and manage your tour business, all in one place.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Inline Editing</h4>
+          <p class="text-sm text-muted-foreground">Update tour details instantly without full page reloads, providing a seamless editing experience.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 lg:mt-8 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Weather Integration</h4>
+          <p class="text-sm text-muted-foreground">Automatic, real-time weather forecasts for your tour locations to help you and your guests prepare.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Verified Reviews</h4>
+          <p class="text-sm text-muted-foreground">Build credibility with a robust review and rating system that showcases feedback from your guests.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 lg:mt-8 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Mobile-First Design</h4>
+          <p class="text-sm text-muted-foreground">Manage your tours, bookings, and schedule from anywhere with our fully responsive platform.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Email & SMS Alerts</h4>
+          <p class="text-sm text-muted-foreground">Never miss a booking, cancellation, or inquiry with instant notifications delivered to you.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 lg:mt-8 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Analytics Dashboard</h4>
+          <p class="text-sm text-muted-foreground">Track your performance with detailed insights on earnings, bookings, and guest demographics.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Private & Group Tours</h4>
+          <p class="text-sm text-muted-foreground">Offer both exclusive, private tours and larger group experiences to cater to all types of travelers.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow transform hover:-translate-y-1 lg:mt-8 hover:border-gray-300">
+          <h4 class="font-semibold text-foreground mb-2 text-lg">Multi-language Support</h4>
+          <p class="text-sm text-muted-foreground">Showcase your language skills and connect with travelers from around the world in their native tongue.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final CTA Section -->
+  <div class="py-20 sm:py-28 bg-gradient-to-r from-teal-600 to-orange-500 text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display mb-6">Ready to Share Your Passion?</h2>
+      <p class="text-lg sm:text-xl mb-10 text-white/95 max-w-2xl mx-auto leading-relaxed">
+        Join our community of local experts and start earning today. It's free to create a listing and you can get started in minutes.
+      </p>
+      <%= link_to "Create Your Guide Account", new_guide_registration_path, class: "inline-block btn-primary btn-lg bg-white text-teal-700 hover:bg-teal-50 px-12 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105" %>
+      <p class="mt-8 text-white/80 text-base">
+        Already have an account? <%= link_to "Sign in", new_user_session_path, class: "underline hover:text-white font-semibold" %>
+      </p>
+    </div>
+  </div>
+</div>

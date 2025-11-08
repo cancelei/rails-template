@@ -1,0 +1,80 @@
+/* Custom color utilities */
+.bg-background {
+  background-color: rgb(var(--background));
+}
+
+.bg-foreground {
+  background-color: rgb(var(--foreground));
+}
+
+.bg-muted {
+  background-color: rgb(var(--muted));
+}
+
+.bg-primary {
+  background-color: rgb(var(--primary));
+}
+
+.bg-secondary {
+  background-color: rgb(var(--secondary));
+}
+
+.bg-accent {
+  background-color: rgb(var(--accent));
+}
+
+.text-background {
+  color: rgb(var(--background));
+}
+
+.text-foreground {
+  color: rgb(var(--foreground));
+}
+
+.text-muted-foreground {
+  color: rgb(var(--muted-foreground));
+}
+
+.text-primary {
+  color: rgb(var(--primary));
+}
+
+.text-primary-foreground {
+  color: rgb(var(--primary-foreground));
+}
+
+.text-secondary {
+  color: rgb(var(--secondary));
+}
+
+.text-secondary-foreground {
+  color: rgb(var(--secondary-foreground));
+}
+
+.border-border {
+  border-color: rgb(var(--border));
+}
+
+.border-input {
+  border-color: rgb(var(--input));
+}
+
+.from-primary {
+  --tw-gradient-from: rgb(var(--primary));
+  --tw-gradient-to: rgba(var(--primary), 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-secondary {
+  --tw-gradient-from: rgb(var(--secondary));
+  --tw-gradient-to: rgba(var(--secondary), 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-primary {
+  --tw-gradient-to: rgb(var(--primary));
+}
+
+.to-secondary {
+  --tw-gradient-to: rgb(var(--secondary));
+}

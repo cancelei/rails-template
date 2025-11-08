@@ -1,0 +1,42 @@
+<% provide(:page_title, "Bookings") %>
+
+<div>
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-foreground">Bookings</h1>
+      <p class="mt-1 text-sm text-muted-foreground"><%= @bookings.total_count %> total bookings</p>
+    </div>
+  </div>
+
+  <!-- Status Filter -->
+  <div class="mb-6">
+    <%= form_with url: admin_bookings_path,
+                  method: :get,
+                  data: { controller: "search", turbo_frame: "admin_content", turbo_action: "advance" },
+                  class: "flex gap-4" do |f| %>
+      <%= f.select :status,
+                   options_for_select([
+                     ["All Statuses", ""],
+                     ["Pending", "pending"],
+                     ["Confirmed", "confirmed"],
+                     ["Completed", "completed"],
+                     ["Cancelled", "cancelled"]
+                   ], params[:status]),
+                   {},
+                   class: "shadow-sm focus:ring-primary focus:border-primary block sm:text-sm border-border rounded-md",
+                   data: { action: "change->search#submit" } %>
+    <% end %>
+  </div>
+
+  <!-- Bookings Table -->
+  <%= render "shared/admin_table", columns: %w[Tour User Status Created Actions] do %>
+    <tbody id="bookings_table_body" class="bg-card divide-y divide-border">
+      <%= render @bookings %>
+    </tbody>
+  <% end %>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    <%== pagy_nav(@pagy) if defined?(@pagy) %>
+  </div>
+</div>

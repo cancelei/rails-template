@@ -1,0 +1,44 @@
+<% provide(:title, "Edit Profile") %>
+
+<%= turbo_frame_tag "guide_profile" do %>
+  <div class="card mb-8">
+    <div class="card-body">
+      <h2 class="text-2xl font-bold text-foreground mb-6">Edit Profile</h2>
+
+      <%= form_with model: @guide_profile, url: guide_dashboard_path, method: :patch, data: { turbo_frame: "guide_profile" } do |f| %>
+        <div class="space-y-6">
+          <div class="form-group">
+            <%= f.label :bio, class: "form-label" %>
+            <%= f.text_area :bio, rows: 4, class: "form-input", placeholder: "Tell tourists about yourself, your experience, and what makes your tours special..." %>
+            <p class="text-xs text-muted-foreground mt-1">Maximum 1000 characters</p>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :languages, "Languages Spoken", class: "form-label" %>
+            <%= f.text_field :languages, class: "form-input", placeholder: "e.g., English, Spanish, French" %>
+            <p class="text-xs text-muted-foreground mt-1">Comma-separated list</p>
+          </div>
+
+          <% if @guide_profile.respond_to?(:years_of_experience) %>
+            <div class="form-group">
+              <%= f.label :years_of_experience, class: "form-label" %>
+              <%= f.number_field :years_of_experience, class: "form-input", min: 0, placeholder: "0" %>
+            </div>
+          <% end %>
+
+          <% if @guide_profile.respond_to?(:certifications) %>
+            <div class="form-group">
+              <%= f.label :certifications, class: "form-label" %>
+              <%= f.text_area :certifications, rows: 3, class: "form-input", placeholder: "List your certifications..." %>
+            </div>
+          <% end %>
+
+          <div class="flex gap-3">
+            <%= f.submit "Save Changes", class: "btn-booking" %>
+            <%= link_to "Cancel", guide_dashboard_path, class: "btn-booking-secondary", data: { turbo_frame: "guide_profile" } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

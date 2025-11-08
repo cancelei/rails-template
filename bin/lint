@@ -1,0 +1,141 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "English"
+require "fileutils"
+
+# Unified linting script for all code quality tools
+class LintRunner
+  LINTERS = {
+    rubocop: {
+      name: "RuboCop (Ruby)",
+      check: "bin/rubocop",
+      fix: "bin/rubocop -a"
+    },
+    erb_lint: {
+      name: "ERB Lint (Templates)",
+      check: "bundle exec erb_lint --lint-all",
+      fix: "bundle exec erb_lint --lint-all --autocorrect"
+    },
+    eslint: {
+      name: "ESLint (JavaScript)",
+      check: "npm run js-lint",
+      fix: "npm run js-lint-fix"
+    },
+    stylelint: {
+      name: "Stylelint (CSS)",
+      check: "npm run css-lint",
+      fix: "npm run css-lint-fix"
+    }
+  }.freeze
+
+  def initialize(fix: false, only: nil)
+    @fix = fix
+    @only = only ? [only.to_sym] : LINTERS.keys
+    @results = {}
+  end
+
+  def run
+    puts "=" * 80
+    puts "Running linters#{@fix ? ' with auto-fix' : ''}..."
+    puts "=" * 80
+    puts
+
+    @only.each do |linter|
+      run_linter(linter)
+    end
+
+    print_summary
+    exit(all_passed? ? 0 : 1)
+  end
+
+  private
+
+  def run_linter(linter)
+    config = LINTERS[linter]
+    command = @fix ? config[:fix] : config[:check]
+
+    puts "\n#{'-' * 80}"
+    puts "Running #{config[:name]}..."
+    puts "Command: #{command}"
+    puts "-" * 80
+
+    success = system(command)
+    @results[linter] = {
+      name: config[:name],
+      success: success,
+      exit_code: $CHILD_STATUS.exitstatus
+    }
+
+    puts
+  end
+
+  def print_summary
+    puts "\n"
+    puts "=" * 80
+    puts "LINTING SUMMARY"
+    puts "=" * 80
+
+    @results.each do |linter, result|
+      status = result[:success] ? "✓ PASSED" : "✗ FAILED"
+      color = result[:success] ? "\e[32m" : "\e[31m"
+      reset = "\e[0m"
+
+      puts "#{color}#{status}#{reset} - #{result[:name]} (exit code: #{result[:exit_code]})"
+    end
+
+    puts "=" * 80
+
+    if all_passed?
+      puts "\e[32m✓ All linters passed!\e[0m"
+    else
+      puts "\e[31m✗ Some linters failed. Please fix the issues above.\e[0m"
+    end
+
+    puts
+  end
+
+  def all_passed?
+    @results.values.all? { |result| result[:success] }
+  end
+end
+
+# Parse command line arguments
+fix = ARGV.include?("--fix") || ARGV.include?("-a")
+only = nil
+
+ARGV.each_with_index do |arg, index|
+  if arg == "--only" && ARGV[index + 1]
+    only = ARGV[index + 1]
+  end
+end
+
+# Show help
+if ARGV.include?("--help") || ARGV.include?("-h")
+  puts <<~HELP
+    Usage: bin/lint [options]
+
+    Run all code quality linters (RuboCop, ERB Lint, ESLint, Stylelint)
+
+    Options:
+      --fix, -a           Run linters in auto-fix mode
+      --only LINTER       Run only specified linter (rubocop, erb_lint, eslint, stylelint)
+      --help, -h          Show this help message
+
+    Examples:
+      bin/lint                  # Run all linters in check mode
+      bin/lint --fix            # Run all linters with auto-fix
+      bin/lint --only rubocop   # Run only RuboCop
+      bin/lint --only eslint -a # Run only ESLint with auto-fix
+
+    Available linters:
+      - rubocop     Ruby code style and quality
+      - erb_lint    ERB template linting
+      - eslint      JavaScript code style and quality
+      - stylelint   CSS/SCSS code style and quality
+  HELP
+  exit 0
+end
+
+# Run the linters
+LintRunner.new(fix: fix, only: only).run

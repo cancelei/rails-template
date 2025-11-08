@@ -1,0 +1,6 @@
+<%# locals: (tour:) %>
+<%= render "shared/tour_inline_edit_form",
+           tour: tour,
+           form_url: tour_path(tour),
+           cancel_url: tour_path(tour),
+           show_advanced_fields: false %>

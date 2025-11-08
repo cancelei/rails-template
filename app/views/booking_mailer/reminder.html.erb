@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Your Tour is Coming Up Soon!</h1>
+
+    <p>Dear <%= @booking.booked_name %>,</p>
+
+    <p>
+      This is a friendly reminder that your tour "<strong><%= @tour.title %></strong>"
+      is coming up in <strong><%= @days_until %> <%= @days_until == 1 ? 'day' : 'days' %></strong>!
+    </p>
+
+    <h2>Tour Details:</h2>
+    <ul>
+      <li><strong>Tour:</strong> <%= @tour.title %></li>
+      <li><strong>Date & Time:</strong> <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %></li>
+      <li><strong>Duration:</strong> <%= (@tour.duration_minutes / 60.0).round(1) %> hours</li>
+      <li><strong>Meeting Location:</strong> <%= @tour.location_name %></li>
+      <li><strong>Number of Participants:</strong> <%= @booking.spots %></li>
+      <li><strong>Guide:</strong> <%= @tour.guide.name %></li>
+    </ul>
+
+    <% if @booking.booking_add_ons.any? %>
+      <h2>Your Add-ons:</h2>
+      <ul>
+        <% @booking.booking_add_ons.each do |booking_add_on| %>
+          <li><%= booking_add_on.tour_add_on.name %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <h2>Before You Go:</h2>
+    <ul>
+      <li><strong>Arrive 10-15 minutes early</strong> at the meeting location</li>
+      <li>Check the weather forecast and <strong>dress appropriately</strong></li>
+      <li>Bring <strong>comfortable walking shoes</strong></li>
+      <li>Don't forget your <strong>water and snacks</strong></li>
+      <li>Bring a <strong>camera</strong> to capture the memories</li>
+      <% if @days_until == 1 %>
+        <li>Make sure your phone is <strong>charged</strong> for photos and navigation</li>
+      <% end %>
+    </ul>
+
+    <p>
+      <strong>Need to make changes?</strong><br/>
+      <a href="<%= manage_booking_url(@booking, email: @booking.booked_email) %>"
+         style="color: #3182ce;">Manage My Booking</a>
+    </p>
+
+    <p>
+      We're looking forward to seeing you and providing an unforgettable experience!
+    </p>
+
+    <p>
+      Best regards,<br/>
+      The Tour Team
+    </p>
+  </body>
+</html>

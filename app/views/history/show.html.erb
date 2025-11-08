@@ -1,0 +1,156 @@
+<% provide(:title, "My History") %>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-6 sm:mb-8">My Travel History</h1>
+
+    <!-- Past Trips Section -->
+    <div class="mb-8 sm:mb-12">
+      <h2 class="text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">Past Trips</h2>
+
+      <% if @past_bookings.any? %>
+        <div class="space-y-3 sm:space-y-4">
+          <% @past_bookings.each do |booking| %>
+            <div class="bg-card rounded-lg sm:rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
+                    <%= link_to booking.tour.title, tour_path(booking.tour), class: "hover:text-primary transition-colors active:text-primary/80" %>
+                  </h3>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-sm sm:text-base text-muted-foreground">
+                    <div class="space-y-1">
+                      <p class="truncate"><strong class="font-semibold">Guide:</strong>
+                        <%= link_to booking.tour.guide.name, guide_profile_path(booking.tour.guide.guide_profile), class: "text-primary hover:underline active:text-primary/80" %>
+                      </p>
+                      <p><strong class="font-semibold">Date:</strong> <%= booking.tour.starts_at.strftime("%B %d, %Y") %></p>
+                      <p><strong class="font-semibold">Time:</strong> <%= booking.tour.starts_at.strftime("%I:%M %p") %> - <%= booking.tour.ends_at.strftime("%I:%M %p") %></p>
+                    </div>
+
+                    <div class="space-y-1">
+                      <p class="truncate"><strong class="font-semibold">Location:</strong> <%= booking.tour.location_name %></p>
+                      <p><strong class="font-semibold">Spots Booked:</strong> <%= booking.spots %></p>
+                      <p class="flex items-center gap-2"><strong class="font-semibold">Status:</strong>
+                        <span class="inline-flex px-2 py-1 rounded-full text-xs font-medium <%= booking.confirmed? ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800" %>">
+                          <%= booking.status.titleize %>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Comment and Like Stats for this trip -->
+                  <div class="mt-3 sm:mt-4 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
+                    <% guide_profile = booking.tour.guide.guide_profile %>
+                    <% if guide_profile %>
+                      <% user_comments = current_user.comments.where(guide_profile:) %>
+                      <% user_likes = current_user.likes.joins(:comment).where(comments: { guide_profile: }) %>
+
+                      <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
+                          <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
+                        </svg>
+                        <span><%= user_comments.count %> <%= "comment".pluralize(user_comments.count) %></span>
+                      </div>
+
+                      <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                        </svg>
+                        <span><%= user_likes.count %> <%= "like".pluralize(user_likes.count) %></span>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row lg:flex-col gap-2 mt-3 lg:mt-0">
+                  <% if booking.confirmed? && !booking.review %>
+                    <%= link_to "Leave Review", manage_booking_path(booking), class: "btn btn-primary btn-sm text-center whitespace-nowrap" %>
+                  <% elsif booking.review %>
+                    <span class="text-sm text-green-600 font-medium text-center lg:text-left">✓ Reviewed</span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="bg-card rounded-lg sm:rounded-xl shadow-md p-6 sm:p-8 text-center">
+          <p class="text-gray-500 text-base sm:text-lg">You haven't been on any trips yet.</p>
+          <p class="text-gray-400 mt-2 text-sm sm:text-base">Start exploring and book your first tour!</p>
+          <%= link_to "Browse Tours", tours_path, class: "btn btn-primary mt-4 inline-block" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Past Guides Section -->
+    <div>
+      <h2 class="text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">My Guides</h2>
+
+      <% if @guide_stats.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <% @guide_stats.each do |stat| %>
+            <div class="bg-card rounded-lg sm:rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+              <div class="flex items-start gap-3 sm:gap-4">
+                <div class="flex-shrink-0">
+                  <div class="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span class="text-xl sm:text-2xl font-bold text-primary">
+                      <%= stat[:guide].name.first.upcase %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2 truncate">
+                    <%= link_to stat[:guide].name, guide_profile_path(stat[:guide_profile]), class: "hover:text-primary transition-colors active:text-primary/80" %>
+                  </h3>
+
+                  <div class="space-y-1 sm:space-y-1.5 text-xs sm:text-sm text-muted-foreground">
+                    <p class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                      </svg>
+                      <span><strong class="font-semibold"><%= stat[:tour_count] %></strong> <%= "tour".pluralize(stat[:tour_count]) %></span>
+                    </p>
+
+                    <p class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                      </svg>
+                      <span><strong class="font-semibold"><%= stat[:total_spots] %></strong> <%= "spot".pluralize(stat[:total_spots]) %></span>
+                    </p>
+
+                    <p class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
+                        <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
+                      </svg>
+                      <span><strong class="font-semibold"><%= stat[:comment_count] %></strong> <%= "comment".pluralize(stat[:comment_count]) %></span>
+                    </p>
+
+                    <p class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                      </svg>
+                      <span><strong class="font-semibold"><%= stat[:like_count] %></strong> <%= "like".pluralize(stat[:like_count]) %></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
+                <%= link_to "View Profile", guide_profile_path(stat[:guide_profile]), class: "text-xs sm:text-sm text-primary hover:underline active:text-primary/80 font-medium" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="bg-card rounded-lg sm:rounded-xl shadow-md p-6 sm:p-8 text-center">
+          <p class="text-gray-500 text-base sm:text-lg">You haven't toured with any guides yet.</p>
+          <p class="text-gray-400 mt-2 text-sm sm:text-base">Book a tour to start building your guide history!</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<%#
+  Guide Profile Edit Form Partial
+  Used for inline editing in public guide profile page
+-%>
+
+<% guide_profile ||= @guide_profile %>
+
+<div id="<%= dom_id(guide_profile) %>" class="card-body">
+  <h2 class="text-2xl font-semibold mb-4">Edit Guide Profile</h2>
+
+  <%= form_with(model: guide_profile, data: { turbo_frame: dom_id(guide_profile) }) do |f| %>
+    <div class="space-y-4">
+      <% if guide_profile.errors.any? %>
+        <div class="alert alert-error">
+          <h3 class="font-semibold">Please fix the following errors:</h3>
+          <ul class="list-disc list-inside">
+            <% guide_profile.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :bio, "Biography", class: "form-label" %>
+        <%= f.text_area :bio, rows: 6, class: "form-input", placeholder: "Tell tourists about yourself, your experience, and what makes your tours special..." %>
+        <p class="form-help">This will be displayed on your public profile</p>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :languages, class: "form-label" %>
+        <%= f.text_field :languages, class: "form-input", placeholder: "e.g., English, Spanish, French" %>
+        <p class="form-help">Comma-separated list of languages you speak</p>
+      </div>
+
+      <div class="form-actions flex gap-2">
+        <%= f.submit "Save Changes", class: "btn btn-primary" %>
+        <%= link_to "Cancel",
+            guide_profile_path(guide_profile),
+            data: { turbo_frame: dom_id(guide_profile) },
+            class: "btn btn-ghost" %>
+      </div>
+    </div>
+  <% end %>
+</div>

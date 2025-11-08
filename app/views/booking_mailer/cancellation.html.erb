@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Booking Cancelled</h1>
+
+    <p>Dear <%= @booking.booked_name %>,</p>
+
+    <p>
+      This email confirms that your booking for "<strong><%= @tour.title %></strong>" has been cancelled.
+    </p>
+
+    <h2>Cancelled Booking Details:</h2>
+    <ul>
+      <li><strong>Tour:</strong> <%= @tour.title %></li>
+      <li><strong>Date & Time:</strong> <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %></li>
+      <li><strong>Location:</strong> <%= @tour.location_name %></li>
+      <li><strong>Number of Participants:</strong> <%= @booking.spots %></li>
+      <li><strong>Amount:</strong> <%= @booking.formatted_total_price %></li>
+    </ul>
+
+    <p>
+      We're sorry you won't be joining us this time. We hope to see you on a future tour!
+    </p>
+
+    <p>
+      <strong>Looking for another tour?</strong><br/>
+      Browse our available tours and find your next adventure:<br/>
+      <a href="<%= tours_url %>" style="color: #3182ce;">View All Tours</a>
+    </p>
+
+    <p>
+      If you have any questions about this cancellation or need assistance,
+      please don't hesitate to reach out to us.
+    </p>
+
+    <p>
+      Best regards,<br/>
+      The Tour Team
+    </p>
+  </body>
+</html>

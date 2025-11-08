@@ -1,0 +1,60 @@
+<%# locals: (guide_profile:) %>
+<div class="card mb-8">
+  <div class="card-body">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold text-foreground">My Profile</h2>
+      <%= link_to "Edit Profile",
+                  edit_guide_dashboard_path,
+                  class: "text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2",
+                  data: { turbo_frame: "guide_profile" } %>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-1">Name</h3>
+        <p class="text-foreground"><%= guide_profile.user.name %></p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-1">Email</h3>
+        <p class="text-foreground"><%= guide_profile.user.email %></p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-1">Bio</h3>
+        <p class="text-foreground"><%= guide_profile.bio.presence || "No bio added yet" %></p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-1">Languages</h3>
+        <p class="text-foreground"><%= guide_profile.languages.presence || "Not specified" %></p>
+      </div>
+
+      <% if guide_profile.respond_to?(:years_of_experience) %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-1">Years of Experience</h3>
+          <p class="text-foreground"><%= guide_profile.years_of_experience.presence || "Not specified" %></p>
+        </div>
+      <% end %>
+
+      <% if guide_profile.respond_to?(:certifications) %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-1">Certifications</h3>
+          <p class="text-foreground"><%= guide_profile.certifications.presence || "Not specified" %></p>
+        </div>
+      <% end %>
+
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-1">Rating</h3>
+        <p class="text-foreground">
+          <% if guide_profile.rating_cached.present? %>
+            <span class="text-2xl font-bold"><%= number_with_precision(guide_profile.rating_cached, precision: 1) %></span>
+            <span class="text-muted-foreground">/ 5.0</span>
+          <% else %>
+            <span class="text-muted-foreground">No ratings yet</span>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

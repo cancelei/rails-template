@@ -1,0 +1,49 @@
+/* Notification Component Styles */
+
+.notification {
+  @apply flex items-start gap-3 p-4 rounded-lg shadow-lg border max-w-md;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notification-success {
+  @apply bg-green-50 border-green-200 text-green-800;
+}
+
+.notification-error {
+  @apply bg-red-50 border-red-200 text-red-800;
+}
+
+.notification-info {
+  @apply bg-blue-50 border-blue-200 text-blue-800;
+}
+
+.notification-warning {
+  @apply bg-yellow-50 border-yellow-200 text-yellow-800;
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}

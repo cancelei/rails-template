@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Booking Confirmed - You're All Set!</h1>
+
+    <p>Dear <%= @booking.booked_name %>,</p>
+
+    <p>
+      Great news! Your booking for "<strong><%= @tour.title %></strong>" has been confirmed.
+      We're excited to have you join us!
+    </p>
+
+    <h2>Tour Details:</h2>
+    <ul>
+      <li><strong>Tour:</strong> <%= @tour.title %></li>
+      <li><strong>Date & Time:</strong> <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %></li>
+      <li><strong>Duration:</strong> <%= (@tour.duration_minutes / 60.0).round(1) %> hours</li>
+      <li><strong>Meeting Location:</strong> <%= @tour.location_name %></li>
+      <li><strong>Number of Participants:</strong> <%= @booking.spots %></li>
+      <li><strong>Guide:</strong> <%= @tour.guide.name %></li>
+    </ul>
+
+    <h2>Booking Summary:</h2>
+    <ul>
+      <li><strong>Tour Price:</strong> <%= number_to_currency(@booking.tour_price / 100.0, unit: @tour.currency == "BRL" ? "R$" : "$") %>
+        <% if @booking.spots > 1 %>
+          (<%= @booking.spots %> × <%= number_to_currency((@tour.price_cents || 0) / 100.0, unit: @tour.currency == "BRL" ? "R$" : "$") %> per person)
+        <% end %>
+      </li>
+      <% if @booking.booking_add_ons.any? %>
+        <li><strong>Selected Add-ons:</strong></li>
+        <ul style="margin-left: 20px;">
+          <% @booking.booking_add_ons.each do |booking_add_on| %>
+            <li><%= booking_add_on.tour_add_on.name %>: <%= booking_add_on.formatted_price %></li>
+          <% end %>
+        </ul>
+        <li><strong>Add-ons Total:</strong> <%= number_to_currency(@booking.add_ons_total / 100.0, unit: @tour.currency == "BRL" ? "R$" : "$") %></li>
+      <% end %>
+      <li style="margin-top: 10px; font-size: 1.2em; color: #2c5282;">
+        <strong>Total Amount:</strong> <strong><%= @booking.formatted_total_price %></strong>
+      </li>
+    </ul>
+
+    <h2>What to Bring:</h2>
+    <ul>
+      <li>Comfortable walking shoes</li>
+      <li>Water and snacks</li>
+      <li>Weather-appropriate clothing</li>
+      <li>Camera for capturing memories</li>
+    </ul>
+
+    <p>
+      <strong>Need to make changes?</strong><br/>
+      You can manage your booking, including cancellation if needed, by using this link:<br/>
+      <a href="<%= manage_booking_url(@booking, email: @booking.booked_email) %>"
+         style="color: #3182ce;">Manage My Booking</a>
+    </p>
+
+    <p>
+      <em>You'll receive a reminder 3 days and 1 day before your tour.</em>
+    </p>
+
+    <p>We look forward to providing you with an unforgettable experience!</p>
+
+    <p>
+      Best regards,<br/>
+      The Tour Team
+    </p>
+  </body>
+</html>

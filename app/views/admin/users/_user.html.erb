@@ -1,0 +1,33 @@
+<%# locals: (user:) %>
+<tr id="<%= dom_id(user) %>">
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+    <div class="text-sm font-medium text-foreground"><%= user.name %></div>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+    <div class="text-sm text-muted-foreground"><%= user.email %></div>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+    <% badge_color = case user.role
+                     when "admin" then "bg-accent/20 text-accent"
+                     when "guide" then "bg-primary/20 text-primary"
+                     else "bg-success/20 text-success"
+                     end %>
+    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= badge_color %>">
+      <%= user.role.titleize %>
+    </span>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+    <%= user.created_at.strftime("%b %d, %Y") %>
+  </td>
+  <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <%= link_to "Edit",
+                edit_admin_user_path(user),
+                class: "text-primary hover:text-opacity-80 mr-4",
+                data: { turbo_frame: "modal" } %>
+    <%= button_to "Delete",
+                  admin_user_path(user),
+                  method: :delete,
+                  form: { data: { turbo_confirm: "Are you sure?" } },
+                  class: "text-danger hover:text-opacity-80" %>
+  </td>
+</tr>

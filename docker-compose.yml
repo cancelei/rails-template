@@ -16,21 +16,19 @@ x-services:
 services:
   db:
     image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - pgdata:/var/lib/postgresql
   app:
     <<: *rails
     links:
       - db
-      - shakapacker
-    environment:
-      WEBPACKER_DEV_SERVER_HOST: shakapacker
     ports:
       - '3000:3000'
     command: "bash -c 'rm -rf tmp/pid/server.pid && rails s --binding 0.0.0.0'"
-  shakapacker:
-    <<: *rails
-    command: './bin/webpack-dev-server'
 volumes:
   pgdata:
   bundle:

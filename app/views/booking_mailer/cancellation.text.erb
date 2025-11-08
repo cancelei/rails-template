@@ -1,0 +1,17 @@
+Booking Cancellation
+====================
+
+Dear <%= @booking.booked_name %>,
+
+Your booking has been cancelled.
+
+Cancelled Tour Details:
+- Tour: <%= @tour.title %>
+- Date: <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %>
+- Location: <%= @tour.location_name %>
+- Spots: <%= @booking.spots %>
+
+If you have any questions, please contact us.
+
+Best regards,
+The Tour Team

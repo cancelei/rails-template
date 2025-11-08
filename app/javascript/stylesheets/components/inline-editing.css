@@ -1,0 +1,193 @@
+/* Inline Editing Component Styles */
+
+/* Turbo Frame wrapper for inline editing */
+turbo-frame[id^="tour_"],
+turbo-frame[id^="booking_"] {
+  display: contents;
+}
+
+/* Inline edit form container */
+.inline-edit-form {
+  @apply w-full;
+}
+
+/* Responsive inline editing for tables */
+@media (max-width: 768px) {
+  /* On mobile, expand inline edit forms to full width */
+  tr > td[colspan] {
+    @apply block w-full px-0;
+  }
+
+  /* Stack form fields vertically on mobile */
+  .inline-edit-form .grid {
+    @apply grid-cols-1 gap-3;
+  }
+
+  /* Adjust form buttons for mobile */
+  .inline-edit-form .flex.gap-3 {
+    @apply flex-col;
+  }
+
+  .inline-edit-form .btn-booking,
+  .inline-edit-form .btn-booking-secondary {
+    @apply w-full text-center;
+  }
+
+  /* Make cards in inline forms more compact on mobile */
+  .inline-edit-form .card-body {
+    @apply px-4 py-4;
+  }
+
+  /* Reduce heading sizes in inline forms on mobile */
+  .inline-edit-form h3 {
+    @apply text-lg;
+  }
+}
+
+/* Loading state for inline edit buttons */
+[data-controller="loading-state"] {
+  position: relative;
+}
+
+[data-controller="loading-state"][data-loading="true"] {
+  @apply opacity-75 cursor-wait;
+}
+
+/* Smooth transition when toggling between view and edit modes */
+turbo-frame[id^="tour_"][data-transition],
+turbo-frame[id^="booking_"][data-transition] {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Highlight row being edited */
+tr:has(turbo-frame[data-editing="true"]) {
+  background-color: rgb(var(--muted) / 0.2);
+}
+
+/* Edit button hover states */
+a[data-turbo-frame]:hover {
+  @apply underline decoration-2 underline-offset-2;
+}
+
+/* Form error states in inline editing */
+.inline-edit-form .alert-danger {
+  @apply rounded-md p-3 mb-4;
+}
+
+/* Responsive form groups */
+@media (max-width: 640px) {
+  .inline-edit-form .form-group label {
+    @apply text-sm;
+  }
+
+  .inline-edit-form .form-input,
+  .inline-edit-form .form-select {
+    @apply text-sm;
+  }
+}
+
+/* Ensure inline forms don't break table layout on larger screens */
+@media (min-width: 769px) {
+  tr > td[colspan] .card {
+    @apply shadow-lg;
+  }
+}
+
+/* Notification positioning for inline edits */
+#notifications {
+  @apply pointer-events-none;
+}
+
+#notifications > * {
+  @apply pointer-events-auto;
+}
+
+/* Mobile-specific table enhancements */
+@media (max-width: 768px) {
+  /* Make table scrollable on mobile */
+  .overflow-x-auto {
+    @apply -mx-4;
+  }
+
+  /* Adjust table cell padding for mobile */
+  table td,
+  table th {
+    @apply px-3 py-3 text-sm;
+  }
+
+  /* Stack action buttons vertically on mobile */
+  td .flex.gap-2 {
+    @apply flex-col items-start gap-1;
+  }
+
+  td .flex.gap-2 a,
+  td .flex.gap-2 button {
+    @apply w-full text-left;
+  }
+}
+
+/* Touch target improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets for buttons and links */
+  .inline-edit-form button,
+  .inline-edit-form a[data-turbo-frame],
+  table a,
+  table button {
+    @apply min-h-[44px] px-4;
+  }
+
+  /* Prevent accidental zooming on input focus */
+  .inline-edit-form input[type="text"],
+  .inline-edit-form input[type="email"],
+  .inline-edit-form input[type="number"],
+  .inline-edit-form input[type="date"],
+  .inline-edit-form input[type="datetime-local"],
+  .inline-edit-form textarea,
+  .inline-edit-form select {
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+}
+
+/* Focus states for accessibility */
+.inline-edit-form input:focus,
+.inline-edit-form textarea:focus,
+.inline-edit-form select:focus {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Disabled state for inline edit forms during submission */
+.inline-edit-form[data-submitting="true"] {
+  @apply opacity-60 pointer-events-none;
+}
+
+/* Cancel button specific styles */
+.btn-booking-secondary {
+  background-color: transparent;
+  border: 2px solid rgb(var(--border));
+  color: rgb(var(--foreground));
+  @apply transition-all duration-200;
+}
+
+.btn-booking-secondary:hover {
+  background-color: rgb(var(--muted));
+  border-color: rgb(var(--muted));
+}
+
+/* Enhanced mobile grid layouts */
+@media (max-width: 640px) {
+  .inline-edit-form .grid-cols-2 {
+    @apply grid-cols-1;
+  }
+
+  .inline-edit-form .grid-cols-3 {
+    @apply grid-cols-1;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .inline-edit-form .grid-cols-3 {
+    @apply grid-cols-2;
+  }
+}

@@ -1,0 +1,109 @@
+<%#
+  Shared guide profile display component
+
+  Params:
+    guide_profile: GuideProfile - The guide profile to display
+    context: Symbol - :guide or :admin (determines layout and edit link)
+    show_user_info: Boolean - Whether to show name and email (default: false)
+    edit_url: String - Optional custom edit URL
+    turbo_frame_id: String - Optional custom turbo frame ID
+%>
+<%
+  context ||= :guide
+  show_user_info = local_assigns.fetch(:show_user_info, context == :guide)
+
+  # Determine edit URL based on context
+  edit_url ||= case context
+               when :admin
+                 edit_admin_guide_profile_path(guide_profile)
+               else
+                 edit_guide_dashboard_path
+               end
+
+  # Determine turbo frame ID based on context
+  turbo_frame_id ||= context == :admin ? dom_id(guide_profile, :profile) : "guide_profile"
+
+  # Determine title based on context
+  title = context == :admin ? "Guide Profile" : "My Profile"
+
+  # Layout class based on context
+  layout_class = context == :admin ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-4"
+%>
+
+<div class="card mb-8">
+  <div class="card-body">
+    <div class="flex items-center justify-between mb-<%= context == :admin ? '6' : '4' %>">
+      <h2 class="text-2xl font-bold text-foreground"><%= title %></h2>
+      <%= link_to context == :admin ? "Edit" : "Edit Profile",
+                  edit_url,
+                  class: "text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2",
+                  data: { turbo_frame: turbo_frame_id } %>
+    </div>
+
+    <div class="<%= layout_class %>">
+      <% if context == :admin %>
+        <%# Admin layout: Left column for bio, right column for other info %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-2">Bio</h3>
+          <p class="text-foreground whitespace-pre-wrap"><%= guide_profile.bio.presence || "No bio added yet" %></p>
+        </div>
+
+        <div class="space-y-4">
+      <% end %>
+
+      <% if show_user_info %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-<%= context == :admin ? '2' : '1' %>">Name</h3>
+          <p class="text-foreground"><%= guide_profile.user.name %></p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-<%= context == :admin ? '2' : '1' %>">Email</h3>
+          <p class="text-foreground"><%= guide_profile.user.email %></p>
+        </div>
+      <% end %>
+
+      <% if context == :guide %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-1">Bio</h3>
+          <p class="text-foreground"><%= guide_profile.bio.presence || "No bio added yet" %></p>
+        </div>
+      <% end %>
+
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-<%= context == :admin ? '2' : '1' %>">Languages</h3>
+        <p class="text-foreground"><%= guide_profile.languages.presence || "Not specified" %></p>
+      </div>
+
+      <% if guide_profile.respond_to?(:years_of_experience) %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-<%= context == :admin ? '2' : '1' %>">Years of Experience</h3>
+          <p class="text-foreground"><%= guide_profile.years_of_experience.presence || "Not specified" %></p>
+        </div>
+      <% end %>
+
+      <% if guide_profile.respond_to?(:certifications) %>
+        <div>
+          <h3 class="text-sm font-medium text-muted-foreground mb-<%= context == :admin ? '2' : '1' %>">Certifications</h3>
+          <p class="text-foreground <%= 'whitespace-pre-wrap' if context == :admin %>"><%= guide_profile.certifications.presence || "Not specified" %></p>
+        </div>
+      <% end %>
+
+      <div>
+        <h3 class="text-sm font-medium text-muted-foreground mb-<%= context == :admin ? '2' : '1' %>">Rating</h3>
+        <p class="text-foreground">
+          <% if guide_profile.rating_cached.present? %>
+            <span class="<%= context == :admin ? 'text-3xl' : 'text-2xl' %> font-bold"><%= number_with_precision(guide_profile.rating_cached, precision: 1) %></span>
+            <span class="text-muted-foreground <%= 'text-lg' if context == :admin %>">/ 5.0</span>
+          <% else %>
+            <span class="text-muted-foreground">No ratings yet</span>
+          <% end %>
+        </p>
+      </div>
+
+      <% if context == :admin %>
+        </div> <%# Close right column %>
+      <% end %>
+    </div>
+  </div>
+</div>

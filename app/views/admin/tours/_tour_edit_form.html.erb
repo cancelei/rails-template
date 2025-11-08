@@ -1,0 +1,12 @@
+<%# locals: (tour:) %>
+<%= turbo_frame_tag dom_id(tour), target: "_top" do %>
+<tr>
+  <td colspan="6" class="px-4 sm:px-6 py-4">
+    <%= render "shared/tour_inline_edit_form",
+               tour: tour,
+               form_url: admin_tour_path(tour),
+               cancel_url: admin_tour_path(tour),
+               show_advanced_fields: true %>
+  </td>
+</tr>
+<% end %>

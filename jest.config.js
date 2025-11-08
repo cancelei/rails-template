@@ -7,10 +7,16 @@ const config = {
 
   testEnvironment: 'jsdom',
 
-  testPathIgnorePatterns: ['config/'],
+  testPathIgnorePatterns: ['config/', 'tests/'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
+  transform: {
+    '^.+\\.js$': ['@swc/jest']
+  },
   setupFilesAfterEnv: [
-    './app/frontend/test/setupJestDomMatchers.js',
-    './app/frontend/test/setupExpectEachTestHasAssertions.js'
+    './app/javascript/test/setupJestDomMatchers.js',
+    './app/javascript/test/setupExpectEachTestHasAssertions.js'
   ]
 };
 

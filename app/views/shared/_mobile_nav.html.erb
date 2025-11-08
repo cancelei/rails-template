@@ -1,0 +1,87 @@
+<%# locals: (current_user: nil) %>
+
+<%# Mobile navigation menu overlay - rendered outside header to escape dimensional constraints %>
+<div id="mobile-nav-menu"
+     class="mobile-nav-menu fixed inset-0 z-[60] lg:hidden pointer-events-none opacity-0 transition-opacity duration-300"
+     data-mobile-nav-target="menu"
+     role="dialog"
+     aria-modal="true"
+     aria-hidden="true"
+     aria-label="Mobile navigation">
+
+    <%# Backdrop overlay %>
+    <div class="mobile-nav-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"
+         data-mobile-nav-target="backdrop"
+         data-action="click->mobile-nav#close"></div>
+
+    <%# Slide-in menu panel %>
+    <div class="mobile-nav-panel absolute top-0 right-0 h-full w-80 max-w-[90vw] bg-card border-l border-border shadow-xl translate-x-full transition-transform duration-300 ease-in-out"
+         data-mobile-nav-target="panel">
+
+      <%# Header with close button %>
+      <div class="flex items-center justify-between p-4 border-b border-border bg-background">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Menu</h2>
+        <button type="button"
+                class="mobile-nav-close flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-md text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                data-action="mobile-nav#close"
+                aria-label="Close navigation menu">
+          <span class="sr-only">Close navigation menu</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <%# Navigation links %>
+      <nav class="flex-1 overflow-y-auto p-4">
+        <div class="space-y-4">
+          <%# Main navigation links %>
+          <div class="space-y-2">
+            <% primary_navigation_links(current_user).each do |link| %>
+              <%= link_to link[:label],
+                          link[:path],
+                          class: "mobile-nav-link block px-3 py-3 min-h-[44px] flex items-center text-base font-medium text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors",
+                          aria: { label: link[:aria_label] },
+                          data: { action: "click->mobile-nav#close" } %>
+            <% end %>
+          </div>
+
+          <%# Auth section %>
+          <div class="border-t border-border pt-4">
+            <% auth_data = auth_navigation_data(current_user) %>
+
+            <% if auth_data[:state] == :signed_in %>
+              <div class="space-y-3">
+                <div class="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                  Signed in as <strong class="text-gray-900 dark:text-white"><%= auth_data[:email] %></strong>
+                </div>
+                <% sign_out = auth_data[:sign_out] %>
+                <%= button_to sign_out[:label],
+                              sign_out[:path],
+                              method: sign_out[:method],
+                              class: "mobile-nav-link w-full text-left px-3 py-3 min-h-[44px] flex items-center text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors",
+                              aria: { label: sign_out[:aria_label] },
+                              data: { action: "click->mobile-nav#close" },
+                              form: { class: "w-full" } %>
+              </div>
+            <% else %>
+              <div class="space-y-2">
+                <% auth_data[:links].each do |link| %>
+                  <% is_primary = link[:label] == "Sign Up" %>
+                  <%= link_to link[:label],
+                              link[:path],
+                              class: [
+                                "mobile-nav-link block px-3 py-3 min-h-[44px] flex items-center rounded-md transition-colors text-base font-medium",
+                                (is_primary ? "bg-primary text-white hover:bg-primary/90" : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700")
+                              ].join(" "),
+                              aria: { label: link[:aria_label] },
+                              data: { action: "click->mobile-nav#close" } %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<%# locals: (resource:) %>
+<% if resource.errors.any? %>
+  <div class="alert alert-danger mb-6" role="alert">
+    <h4 class="font-semibold mb-2">
+      <%= pluralize(resource.errors.count, "error") %> prevented your account from being created:
+    </h4>
+    <ul class="text-sm list-disc list-inside space-y-1">
+      <% resource.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

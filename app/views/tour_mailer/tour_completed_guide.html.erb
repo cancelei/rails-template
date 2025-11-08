@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Tour Completed Successfully!</h1>
+
+    <p>Dear <%= @guide.name %>,</p>
+
+    <p>Your tour "<strong><%= @tour.title %></strong>" has been completed.</p>
+
+    <h2>Tour Summary:</h2>
+    <ul>
+      <li><strong>Tour Date:</strong> <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %></li>
+      <li><strong>Location:</strong> <%= @tour.location_name %></li>
+      <li><strong>Total Bookings:</strong> <%= @confirmed_bookings_count %></li>
+      <li><strong>Total Participants:</strong> <%= @total_participants %></li>
+    </ul>
+
+    <p>
+      We've sent review invitations to all participants. You can view any reviews they leave
+      on your guide profile page.
+    </p>
+
+    <p>
+      Thank you for providing a great experience to your tourists!
+    </p>
+
+    <p>
+      Best regards,<br/>
+      The Tour Team
+    </p>
+  </body>
+</html>

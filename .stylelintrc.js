@@ -16,6 +16,17 @@ module.exports = {
     'no-invalid-double-slash-comments': true,
     'no-duplicate-at-import-rules': true,
     'no-invalid-position-at-import-rule': true,
-    'length-zero-no-unit': true
+    'length-zero-no-unit': true,
+    'property-no-unknown': [
+      true,
+      {
+        ignoreProperties: [
+          'ring',
+          'ring-color',
+          'ring-offset',
+          'ring-offset-color'
+        ]
+      }
+    ]
   }
 };

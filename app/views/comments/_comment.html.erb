@@ -1,0 +1,45 @@
+<%# locals: (comment:, guide_profile:, is_liked:) %>
+<%
+  # Local variables expected:
+  # - comment: the comment to display
+  # - guide_profile: the guide profile (for booking stats)
+  # - is_liked: (optional) whether current user has liked this comment
+  is_liked = local_assigns.fetch(:is_liked, comment.liked_by?(current_user)) if user_signed_in?
+  booking_stats = booking_stats_for_comment(comment.user, guide_profile.user)
+%>
+<div id="comment_<%= comment.id %>" class="bg-card p-4 rounded-lg shadow-sm mb-4">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="font-semibold text-foreground"><%= comment.user.name %></span>
+        <span class="text-sm text-gray-500"><%= time_ago_in_words(comment.created_at) %> ago</span>
+      </div>
+
+      <% if booking_stats && booking_stats[:total_bookings] > 0 %>
+        <div class="bg-blue-50 px-3 py-1 rounded-md mb-2 text-sm text-blue-800">
+          <% if booking_stats[:last_tour] %>
+            <span class="font-medium">Last tour:</span> <%= booking_stats[:last_tour].title %>
+            (<%= booking_stats[:last_tour].starts_at.strftime("%b %d, %Y") %>) •
+          <% end %>
+          <span class="font-medium">Participated in <%= pluralize(booking_stats[:tours_participated], "tour") %></span>
+          <% if booking_stats[:total_bookings] > 1 %>
+            • <%= booking_stats[:total_bookings] %> bookings total
+          <% end %>
+        </div>
+      <% end %>
+
+      <p class="text-gray-700 mb-3"><%= comment.content %></p>
+      <div class="flex items-center gap-4">
+        <% if user_signed_in? %>
+          <div id="like_button_<%= comment.id %>">
+            <%= render "comments/like_button", comment:, is_liked: %>
+          </div>
+        <% else %>
+          <span class="flex items-center gap-1 text-sm text-gray-500">
+            <%= comment.likes_count || 0 %> likes
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

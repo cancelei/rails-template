@@ -1,0 +1,49 @@
+<% provide(:page_title, "Users") %>
+
+<div>
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-foreground">Users</h1>
+      <p class="mt-1 text-sm text-muted-foreground"><%= @users.total_count %> total users</p>
+    </div>
+    <%= link_to "New User",
+                new_admin_user_path,
+                class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white btn-booking hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary",
+                data: { turbo_frame: "modal" } %>
+  </div>
+
+  <!-- Search -->
+  <%= form_with url: admin_users_path,
+                method: :get,
+                data: {
+                  controller: "search",
+                  turbo_frame: "admin_content",
+                  turbo_action: "advance"
+                },
+                class: "mb-6" do |f| %>
+    <div class="max-w-lg">
+      <%= f.text_field :q,
+                       value: params[:q],
+                       placeholder: "Search by name or email...",
+                       data: {
+                         action: "input->search#submit",
+                         search_target: "input"
+                       },
+                       class: "shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-border rounded-md" %>
+    </div>
+  <% end %>
+
+  <!-- Users Table -->
+  <div class="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
+    <%= render "shared/admin_table", columns: %w[Name Email Role Created Actions] do %>
+    <tbody id="users_table_body" class="bg-card divide-y divide-border">
+      <%= render @users %>
+    </tbody>
+  <% end %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    <%== pagy_nav(@pagy) if defined?(@pagy) %>
+  </div>
+</div>

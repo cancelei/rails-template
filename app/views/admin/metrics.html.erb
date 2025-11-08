@@ -1,0 +1,176 @@
+<% provide(:page_title, "Dashboard") %>
+
+<div>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
+    <p class="text-muted-foreground">Monitor platform activity and key metrics</p>
+  </div>
+
+  <!-- Metrics Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Guides Metric -->
+    <%= turbo_frame_tag "metric_guides", data: { turbo_action: "advance" } do %>
+      <div class="bg-card rounded-lg shadow-md border border-border p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-muted-foreground mb-1">Total Guides</p>
+            <p class="text-4xl font-bold text-foreground"><%= @guide_count %></p>
+            <p class="text-xs text-muted-foreground mt-2">Active tour leaders</p>
+          </div>
+          <div class="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-2a6 6 0 0112 0v2zm6-11.5a.5.5 0 11-1 0 .5.5 0 011 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Tourists Metric -->
+    <%= turbo_frame_tag "metric_tourists" do %>
+      <div class="bg-card rounded-lg shadow-md border border-border p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-muted-foreground mb-1">Total Tourists</p>
+            <p class="text-4xl font-bold text-foreground"><%= @tourist_count %></p>
+            <p class="text-xs text-muted-foreground mt-2">Registered users</p>
+          </div>
+          <div class="flex items-center justify-center w-12 h-12 bg-accent/10 rounded-lg">
+            <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zM5 20a3 3 0 015.856-1.487M5 7a3 3 0 016 0"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Total Tours Metric -->
+    <%= turbo_frame_tag "metric_tours" do %>
+      <div class="bg-card rounded-lg shadow-md border border-border p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-muted-foreground mb-1">Total Tours</p>
+            <p class="text-4xl font-bold text-foreground"><%= @tour_count %></p>
+            <p class="text-xs text-muted-foreground mt-2">Available tours</p>
+          </div>
+          <div class="flex items-center justify-center w-12 h-12 bg-secondary/10 rounded-lg">
+            <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 6l6 6m0 0l6-6m-6 6v12"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Upcoming Tours Metric -->
+    <%= turbo_frame_tag "metric_upcoming" do %>
+      <div class="bg-card rounded-lg shadow-md border border-border p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-muted-foreground mb-1">Upcoming Tours</p>
+            <p class="text-4xl font-bold text-foreground"><%= @upcoming_tour_count %></p>
+            <p class="text-xs text-muted-foreground mt-2">Scheduled in next 30 days</p>
+          </div>
+          <div class="flex items-center justify-center w-12 h-12 bg-warning/10 rounded-lg">
+            <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Recent Bookings (7 days) Metric -->
+    <%= turbo_frame_tag "metric_bookings_7d" do %>
+      <div class="bg-card rounded-lg shadow-md border border-border p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-muted-foreground mb-1">Bookings (7 Days)</p>
+            <p class="text-4xl font-bold text-foreground"><%= @booking_count_7_days %></p>
+            <p class="text-xs text-muted-foreground mt-2">Recent activity</p>
+          </div>
+          <div class="flex items-center justify-center w-12 h-12 bg-danger/10 rounded-lg">
+            <svg class="w-6 h-6 text-danger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Monthly Bookings Metric -->
+    <%= turbo_frame_tag "metric_bookings_30d" do %>
+      <div class="bg-card rounded-lg shadow-md border border-border p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-muted-foreground mb-1">Bookings (30 Days)</p>
+            <p class="text-4xl font-bold text-foreground"><%= @booking_count_30_days %></p>
+            <p class="text-xs text-muted-foreground mt-2">Monthly performance</p>
+          </div>
+          <div class="flex items-center justify-center w-12 h-12 bg-info/10 rounded-lg">
+            <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8L5.586 19.414a2 2 0 01-2.828 0l-.828-.828a2 2 0 010-2.828L7.172 7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="bg-card shadow-md rounded-lg border border-border">
+    <div class="px-6 py-4 border-b border-border">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">Recent Bookings</h2>
+          <p class="text-sm text-muted-foreground mt-1">Latest booking activity on the platform</p>
+        </div>
+        <%= link_to "View All", admin_bookings_path, class: "btn-ghost btn-sm" %>
+      </div>
+    </div>
+
+    <% if @recent_bookings.any? %>
+      <div class="divide-y divide-border">
+        <% @recent_bookings.each do |booking| %>
+          <div class="px-6 py-4 hover:bg-muted/50 transition-colors">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-foreground truncate"><%= booking.tour.title %></p>
+                <p class="text-sm text-muted-foreground mt-1">
+                  By <%= booking.user.name %> • <%= link_to "View", admin_booking_path(booking), class: "text-primary hover:text-primary/80 underline" %>
+                </p>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <div class="text-right">
+                  <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold
+                    <%= case booking.status
+                        when "confirmed"
+                          "bg-success/10 text-success"
+                        when "pending"
+                          "bg-warning/10 text-warning"
+                        when "cancelled"
+                          "bg-danger/10 text-danger"
+                        else
+                          "bg-muted/10 text-muted-foreground"
+                        end %>">
+                    <%= booking.status.titleize %>
+                  </span>
+                  <p class="text-xs text-muted-foreground mt-2"><%= time_ago_in_words(booking.created_at) %> ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-6 py-12 text-center">
+        <svg class="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+        </svg>
+        <p class="text-sm font-medium text-muted-foreground">No bookings yet</p>
+        <p class="text-xs text-muted-foreground mt-1">Booking activity will appear here</p>
+      </div>
+    <% end %>
+  </div>
+</div>

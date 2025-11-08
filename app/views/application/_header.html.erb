@@ -1,28 +1,43 @@
 <%# locals: () %>
 
-<%# header and navigation menu %>
-<%=
-  content_tag(:style, nonce: content_security_policy_nonce) do
-    <<~STYLE
-      /* Temp style to pass Lighthouse audit */
-      a { display: block; padding: 0.5rem; }
-      input { padding: 0.5rem; margin: 0.5rem; }
-    STYLE
-  end
-%>
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
-  <div class="container-fluid">
-    <h1>Example devise nav</h1>
-    <ul class="navbar-nav">
-      <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
-      <% if current_user %>
-        <li class="navbar-text">You are <strong>Signed in</strong></li>
-        <li class="nav-item"><%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "nav-link" %></li>
-      <% else %>
-        <li class="navbar-text">You are <strong>Not signed in</strong></li>
-        <li class="nav-item"><%= link_to "Sign in", new_user_session_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, class: "nav-link" %></li>
-      <% end %>
-    </ul>
-  </div>
-</nav>
+<div data-controller="mobile-nav" data-mobile-nav-transition-duration-value="300">
+  <header class="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+    <nav class="container" aria-label="Main navigation">
+      <div class="flex justify-between items-center h-16">
+        <%# Logo/Brand and Desktop Navigation %>
+        <div class="flex items-center gap-6">
+          <%= link_to "SeeInSp",
+                      root_path,
+                      class: "font-display text-xl font-bold text-foreground hover:text-primary transition-colors min-h-[44px] flex items-center",
+                      aria: { label: "SeeInSp home" } %>
+
+          <%# Desktop navigation links %>
+          <%= render "shared/desktop_nav", current_user:, section: "nav" %>
+        </div>
+
+        <%# Desktop auth section and Mobile nav toggle %>
+        <div class="flex items-center gap-4">
+          <%# Desktop auth section %>
+          <%= render "shared/desktop_nav", current_user:, section: "auth" %>
+
+          <%# Mobile navigation toggle button only %>
+          <button type="button"
+                  class="mobile-nav-toggle lg:hidden flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  aria-label="Open navigation menu"
+                  aria-controls="mobile-nav-menu"
+                  aria-expanded="false"
+                  data-mobile-nav-target="toggle"
+                  data-action="mobile-nav#toggle">
+            <span class="sr-only">Toggle navigation menu</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <%# Mobile navigation menu overlay - outside header to avoid constraints %>
+  <%= render "shared/mobile_nav", current_user: %>
+</div>

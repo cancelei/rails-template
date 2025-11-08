@@ -1,0 +1,28 @@
+Booking Confirmation
+====================
+
+Dear <%= @booking.booked_name %>,
+
+Your booking has been confirmed!
+
+Tour Details:
+- Tour: <%= @tour.title %>
+- Date: <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %>
+- Location: <%= @tour.location_name %>
+- Spots: <%= @booking.spots %>
+
+Pricing:
+- Tour Price: <%= number_to_currency(@booking.tour_price / 100.0, unit: @tour.currency) %> (<%= @booking.spots %> × <%= number_to_currency((@tour.price_cents || 0) / 100.0, unit: @tour.currency) %>)
+<% if @booking.booking_add_ons.any? %>
+- Add-ons:
+<% @booking.booking_add_ons.each do |booking_add_on| %>
+  * <%= booking_add_on.tour_add_on.name %>: <%= booking_add_on.formatted_price %>
+<% end %>
+- Add-ons Total: <%= number_to_currency(@booking.add_ons_total / 100.0, unit: @tour.currency) %>
+<% end %>
+- Total Price: <%= @booking.formatted_total_price %>
+
+We look forward to seeing you on the tour!
+
+Best regards,
+The Tour Team

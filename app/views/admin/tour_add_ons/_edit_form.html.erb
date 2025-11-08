@@ -1,0 +1,93 @@
+<%# locals: (tour_add_on:, tour:) %>
+
+<div id="<%= dom_id(tour_add_on) %>" class="card border-l-4 border-l-warning">
+  <div class="card-body">
+    <h3 class="text-lg font-semibold mb-4">Edit Add-on</h3>
+
+    <%= form_with model: [:admin, tour, tour_add_on],
+                  class: "space-y-4",
+                  data: { controller: "form_validation loading_state", loading_state_loading_text: "Saving..." } do |f| %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-group">
+          <%= f.label :name, class: "form-label form-label-required" %>
+          <%= f.text_field :name,
+                           class: "form-input",
+                           required: true,
+                           maxlength: 255 %>
+          <% if tour_add_on.errors[:name].any? %>
+            <p class="form-error"><%= tour_add_on.errors[:name].first %></p>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :addon_type, "Type", class: "form-label form-label-required" %>
+          <%= f.select :addon_type,
+                       options_for_select(
+                         [
+                           ["🚗 Transportation", "transportation"],
+                           ["🍽️ Food & Beverage", "food_beverage"],
+                           ["📸 Photography", "photography"],
+                           ["🎒 Equipment & Gear", "equipment"]
+                         ],
+                         tour_add_on.addon_type
+                       ),
+                       {},
+                       class: "form-select",
+                       required: true %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :description, class: "form-label" %>
+        <%= f.text_area :description,
+                        class: "form-textarea",
+                        rows: 2,
+                        maxlength: 1000 %>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="form-group">
+          <%= f.label :price_cents, "Price (cents)", class: "form-label form-label-required" %>
+          <%= f.number_field :price_cents,
+                             class: "form-input",
+                             min: 1,
+                             required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :pricing_type, "Pricing", class: "form-label form-label-required" %>
+          <%= f.select :pricing_type,
+                       options_for_select(
+                         [["Per Person", "per_person"], ["Flat Fee", "flat_fee"]],
+                         tour_add_on.pricing_type
+                       ),
+                       {},
+                       class: "form-select",
+                       required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :maximum_quantity, "Max Qty", class: "form-label" %>
+          <%= f.number_field :maximum_quantity,
+                             class: "form-input",
+                             min: 1 %>
+        </div>
+      </div>
+
+      <div class="flex items-center">
+        <%= f.check_box :active, class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" %>
+        <%= f.label :active, "Active", class: "ml-2 block text-sm text-foreground" %>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= f.submit "Save Changes", class: "btn-booking" %>
+        <%= button_to "Cancel",
+                      admin_tour_tour_add_ons_path(tour),
+                      method: :get,
+                      class: "btn-ghost",
+                      form: { data: { turbo_frame: dom_id(tour_add_on) } } %>
+      </div>
+    <% end %>
+  </div>
+</div>

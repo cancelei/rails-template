@@ -1,41 +1,80 @@
 Rails.application.routes.draw do
+  resources :guide_profiles, only: %i[show edit update]
   authenticate :user do
     # routes created within this block can only be accessed by a user who has
     # logged in. For example:
     # resources :things
+    resource :history, only: [:show], controller: "history", as: :history
+
+    # Guide dashboard for managing own profile and tours
+    resource :guide_dashboard, only: %i[show edit update], controller: "guides/dashboard"
+
+    # Nested routes for guide profile updates
+    namespace :guides do
+      resource :profile, only: [:update]
+      resources :tours, only: [:index]
+      resources :bookings, only: %i[index edit update] do
+        member do
+          patch :cancel
+        end
+      end
+    end
   end
 
   devise_for :users, controllers: {
-    sessions: "users/sessions"
-  }
+    sessions: "users/sessions",
+    registrations: "users/registrations"
+  }, skip: [:registrations]
 
-  ##
-  # Workaround a "bug" in lighthouse CLI
-  #
-  # Lighthouse CLI (versions 5.4 - 5.6 tested) issues a `GET /asset-manifest.json`
-  # request during its run - the URL seems to be hard-coded. This file does not
-  # exist so, during tests, your test will fail because rails will die with a 404.
-  #
-  # Lighthouse run from Chrome Dev-tools does not have the same behaviour.
-  #
-  # This hack works around this. This behaviour might be fixed by the time you
-  # read this. You can check by commenting out this block and running the
-  # accessibility and performance tests. You are encouraged to remove this hack
-  # as soon as it is no longer needed.
-  #
-  if defined?(Shakapacker) && Rails.env.test?
-    # manifest paths depend on your shakapacker config so we inspect it
-    manifest_path = Shakapacker::Configuration
-                    .new(root_path: Rails.root, config_path: Rails.root.join("config/shakapacker.yml"), env: Rails.env)
-                    .public_manifest_path
-                    .relative_path_from(Rails.public_path)
-                    .to_s
-    get "/asset-manifest.json", to: redirect(manifest_path)
+  # Guide landing page (public)
+  get "become-a-guide", to: "guides/landing#index", as: :become_a_guide
+
+  # Custom registration routes
+  devise_scope :user do
+    # Tourist registration
+    get "signup", to: "tourists/registrations#new", as: :new_tourist_registration
+    post "signup", to: "tourists/registrations#create", as: :tourist_registration
+
+    # Guide registration
+    get "guides/signup", to: "guides/registrations#new", as: :new_guide_registration
+    post "guides/signup", to: "guides/registrations#create", as: :guide_registration
+
+    # Standard Devise routes
+    get "users/edit", to: "users/registrations#edit", as: :edit_user_registration
+    patch "users", to: "users/registrations#update", as: :user_registration
+    delete "users", to: "users/registrations#destroy"
+
+    # Magic link for passwordless auth
+    get "users/magic_link/:token", to: "users/sessions#magic_link", as: :magic_link
   end
 
   root "home#index"
   mount OkComputer::Engine, at: "/healthchecks"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  resources :tours, only: %i[index show new create edit update] do
+    resources :bookings, only: [:create]
+  end
+
+  resources :bookings, only: [] do
+    member do
+      get :manage
+      post :cancel
+      post :review
+    end
+  end
+
+  namespace :admin do
+    get :metrics
+    resources :users, :tours, :bookings, :reviews, :guide_profiles, :weather_snapshots, :email_logs
+
+    resources :tours, only: [] do
+      resources :tour_add_ons, path: "add-ons" do
+        collection do
+          post :reorder
+        end
+      end
+    end
+  end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -47,4 +86,14 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  resources :guide_profiles do
+    resources :comments, only: [:create]
+  end
+
+  resources :comments do
+    member do
+      post :toggle_like
+    end
+  end
 end

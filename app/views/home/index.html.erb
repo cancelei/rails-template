@@ -1,2 +1,200 @@
 <% provide(:title, "Home") %>
-<p>Find me in app/views/home/index.html.erb</p>
+
+<div class="bg-muted">
+  <div class="bg-gradient-to-r from-secondary to-primary text-white py-12 sm:py-20">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-3xl sm:text-5xl font-bold mb-4 sm:mb-6 font-display leading-tight">Welcome to SeeInSp</h1>
+      <p class="text-base sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">Discover amazing tours and explore São Paulo with local guides</p>
+
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+        <%= link_to "Browse All Tours", tours_path, class: "btn-booking btn-lg min-h-[44px]" %>
+        <% if user_signed_in? %>
+          <% if current_user.guide? %>
+            <%= link_to "My Dashboard", guide_dashboard_path, class: "btn-booking-ghost btn-lg min-h-[44px]" %>
+            <%= link_to "Create Tour", new_tour_path, class: "btn-booking-ghost btn-lg min-h-[44px]" %>
+          <% end %>
+        <% else %>
+          <%= link_to "Become a Guide", become_a_guide_path, class: "btn-booking-ghost btn-lg min-h-[44px]" %>
+        <% end %>
+      </div>
+
+      <% unless user_signed_in? %>
+        <p class="text-white/90 mt-4 text-sm leading-relaxed">
+          <%= link_to "Sign in", new_user_session_path, class: "text-white hover:underline inline-block px-2 py-2 min-h-[44px] leading-normal" %> or
+          <%= link_to "sign up", new_tourist_registration_path, class: "text-white hover:underline inline-block px-2 py-2 min-h-[44px] leading-normal" %> to book tours
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Popular Tours Section -->
+    <% if @popular_tours.any? %>
+      <div class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-foreground">🔥 Selling Out Fast</h2>
+            <p class="text-muted-foreground mt-1">These popular tours are booking up quickly!</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @popular_tours.each do |tour| %>
+            <div class="tour-card relative">
+              <% if tour.available_spots.to_f / tour.capacity < 0.2 %>
+                <div class="absolute top-3 right-3 z-10">
+                  <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    Almost Sold Out!
+                  </span>
+                </div>
+              <% elsif tour.available_spots.to_f / tour.capacity < 0.3 %>
+                <div class="absolute top-3 right-3 z-10">
+                  <span class="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    Filling Up Fast
+                  </span>
+                </div>
+              <% end %>
+
+              <% if tour.cover_image.attached? %>
+                <div class="tour-card-image">
+                  <%= image_tag tour.cover_image.variant(resize_to_limit: [400, 300]),
+                      alt: "#{tour.title} tour in #{tour.location_name}",
+                      class: "w-full h-48 object-cover",
+                      loading: "lazy",
+                      decoding: "async" %>
+                </div>
+              <% end %>
+              <div class="tour-card-content">
+                <h3 class="tour-card-title"><%= link_to tour.title, tour %></h3>
+                <p class="tour-card-description"><%= tour.description.truncate(100) %></p>
+                <div class="tour-card-meta">
+                  <div class="space-y-1 text-sm text-muted-foreground">
+                    <p><strong>Guide:</strong> <%= link_to tour.guide.name, guide_profile_path(tour.guide.guide_profile), class: "text-orange-600 hover:text-orange-700" %></p>
+                    <p><strong>Date:</strong> <%= tour.starts_at.strftime('%B %d, %Y') %></p>
+                    <p><strong>Location:</strong> <%= tour.location_name %></p>
+                    <p><strong>Available Spots:</strong>
+                      <span class="spot-indicator <%= tour.available_spots > 10 ? 'high' : (tour.available_spots > 0 ? 'medium' : 'sold-out') %>">
+                        <%= tour.available_spots %> / <%= tour.capacity %>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="tour-card-price">
+                    <%= tour.price_cents ? number_to_currency(tour.price_cents / 100.0, unit: tour.currency) : 'Free' %>
+                  </div>
+                </div>
+                <div class="tour-card-actions">
+                  <%= link_to 'View Details', tour, class: 'btn-booking-secondary btn-sm flex-1 text-center' %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if user_signed_in? && @booked_tours.any? %>
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 text-foreground">Your Booked Tours</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @booked_tours.each do |booking| %>
+            <div class="booking-card">
+              <div class="booking-card-header">
+                <h3 class="booking-card-title"><%= link_to booking.tour.title, booking.tour %></h3>
+                <div class="flex items-center gap-2">
+                  <span class="booking-card-status booking-card-status-confirmed">BOOKED</span>
+                  <span class="text-xs text-slate-500"><%= booking.spots %> spot<%= 's' if booking.spots > 1 %></span>
+                </div>
+              </div>
+              <p class="text-muted-foreground mb-4"><%= booking.tour.description.truncate(100) %></p>
+              <div class="booking-card-details">
+                <p><strong>Guide:</strong> <%= link_to booking.tour.guide.name, guide_profile_path(booking.tour.guide.guide_profile), class: "text-orange-600 hover:text-orange-700" %></p>
+                <p><strong>Date:</strong> <%= booking.tour.starts_at.strftime('%B %d, %Y at %I:%M %p') %></p>
+                <p><strong>Location:</strong> <%= booking.tour.location_name %></p>
+              </div>
+              <div class="booking-card-actions">
+                <%= link_to 'View Details', booking.tour, class: 'btn-booking-secondary btn-sm flex-1 text-center' %>
+                <%= link_to 'Manage', manage_booking_path(booking, email: booking.booked_email), class: 'btn-booking-ghost btn-sm flex-1 text-center' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <h2 class="text-2xl font-bold mb-6 text-foreground">Available Tours</h2>
+    <% if @tours.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @tours.each do |tour| %>
+          <div class="tour-card">
+            <% if tour.cover_image.attached? %>
+              <div class="tour-card-image">
+                <%= image_tag tour.cover_image.variant(resize_to_limit: [400, 300]),
+                    alt: "#{tour.title} tour in #{tour.location_name}",
+                    class: "w-full h-48 object-cover",
+                    loading: "lazy",
+                    decoding: "async" %>
+              </div>
+            <% end %>
+            <div class="tour-card-content">
+              <h3 class="tour-card-title"><%= link_to tour.title, tour %></h3>
+              <p class="tour-card-description"><%= tour.description.truncate(100) %></p>
+              <div class="tour-card-meta">
+                <div class="space-y-1 text-sm text-muted-foreground">
+                  <p><strong>Guide:</strong> <%= link_to tour.guide.name, guide_profile_path(tour.guide.guide_profile), class: "text-orange-600 hover:text-orange-700" %></p>
+                  <p><strong>Date:</strong> <%= tour.starts_at.strftime('%B %d, %Y') %></p>
+                  <p><strong>Location:</strong> <%= tour.location_name %></p>
+                  <p><strong>Available Spots:</strong>
+                    <span class="spot-indicator <%= tour.available_spots > 10 ? 'high' : (tour.available_spots > 0 ? 'medium' : 'sold-out') %>">
+                      <%= tour.available_spots %>
+                    </span>
+                  </p>
+                </div>
+                <div class="tour-card-price">
+                  <%= tour.price_cents ? number_to_currency((tour.price_cents || 0) / 100.0, unit: tour.currency || "USD") : 'Free' %>
+                </div>
+              </div>
+              <div class="tour-card-actions">
+                <%= link_to 'View Details', tour, class: 'btn-booking-secondary btn-sm flex-1 text-center' %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state-card">
+        <div class="empty-state-icon">
+          <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <h3 class="empty-state-title">No tours available</h3>
+        <p class="empty-state-description">Check back later for new tour offerings.</p>
+      </div>
+    <% end %>
+
+    <% if user_signed_in? && @past_tours.any? %>
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold mb-6 text-foreground">Past Tours</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @past_tours.each do |tour| %>
+            <div class="card opacity-75">
+              <div class="card-body">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-lg font-semibold"><%= link_to tour.title, tour, class: "text-foreground hover:text-primary transition-colors" %></h3>
+                  <span class="badge badge-muted text-xs">COMPLETED</span>
+                </div>
+                <p class="text-sm text-muted-foreground mb-4"><%= tour.description.truncate(100) %></p>
+                <div class="space-y-2 text-sm text-muted-foreground mb-4">
+                  <p><strong class="font-semibold">Guide:</strong> <%= link_to tour.guide.name, guide_profile_path(tour.guide.guide_profile), class: "text-primary hover:text-primary/80" %></p>
+                  <p><strong class="font-semibold">Date:</strong> <%= tour.starts_at.strftime('%B %d, %Y') %></p>
+                  <p><strong class="font-semibold">Location:</strong> <%= tour.location_name %></p>
+                </div>
+                <%= link_to 'View Details', tour, class: 'btn-ghost btn-sm w-full text-center' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

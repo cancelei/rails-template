@@ -1,0 +1,42 @@
+<% provide(:title, "Sign up as Tour Guide") %>
+
+<%= render "shared/auth_layout", title: "Become a Tour Guide", description: "Share your passion and create unforgettable experiences" do %>
+  <%= form_for(resource, as: resource_name, url: guide_registration_path, html: { class: "space-y-6", data: { controller: "form_validation loading_state", loading_state_loading_text: "Creating your guide account..." } }) do |f| %>
+    <%= render "shared/registrations/errors", resource: %>
+
+    <!-- Welcome Message -->
+    <div class="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
+      <div class="flex items-start gap-3">
+        <svg class="w-6 h-6 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+          <h3 class="font-semibold text-foreground mb-1">Start Your Journey as a Guide</h3>
+          <p class="text-sm text-muted-foreground">
+            After creating your account, you'll set up your profile with your bio, languages, and experience.
+            Then you can start creating tours and welcoming tourists!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <%= render "shared/registrations/name_field", f: %>
+    <%= render "shared/registrations/email_field", f: %>
+    <%= render "shared/registrations/password_fields", f: %>
+
+    <div class="pt-2">
+      <%= f.submit "Create Guide Account", class: "btn-booking w-full" %>
+    </div>
+
+    <div class="text-center text-sm text-muted-foreground">
+      <p>
+        Just looking to book tours?
+        <%= link_to "Sign up as a tourist", new_tourist_registration_path, class: "text-primary hover:text-primary/80 font-medium" %>
+      </p>
+      <p class="mt-2">
+        Already have an account?
+        <%= link_to "Sign in", new_user_session_path, class: "text-primary hover:text-primary/80 font-medium" %>
+      </p>
+    </div>
+  <% end %>
+<% end %>

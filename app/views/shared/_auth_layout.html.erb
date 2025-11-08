@@ -1,0 +1,21 @@
+<%# locals: (title:, description: nil, show_links: true) %>
+<div class="min-h-screen bg-background flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full">
+    <div class="bg-card rounded-lg shadow-md p-8">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-foreground mb-2"><%= title %></h1>
+        <% if description.present? %>
+          <p class="text-center text-muted-foreground"><%= description %></p>
+        <% end %>
+      </div>
+
+      <%= yield %>
+
+      <% if show_links %>
+        <div class="mt-6 pt-6 border-t border-border text-center text-sm">
+          <%= render "users/shared/links" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

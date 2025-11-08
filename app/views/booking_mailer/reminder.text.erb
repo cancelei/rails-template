@@ -1,0 +1,17 @@
+Tour Reminder
+=============
+
+Dear <%= @booking.booked_name %>,
+
+This is a reminder that your tour is coming up in <%= @days_until %> <%= @days_until == 1 ? 'day' : 'days' %>!
+
+Tour Details:
+- Tour: <%= @tour.title %>
+- Date: <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %>
+- Location: <%= @tour.location_name %>
+- Spots: <%= @booking.spots %>
+
+We're excited to see you soon!
+
+Best regards,
+The Tour Team

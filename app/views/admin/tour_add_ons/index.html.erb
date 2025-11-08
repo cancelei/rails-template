@@ -1,0 +1,92 @@
+<% provide(:title, "Manage Add-ons - #{@tour.title}") %>
+
+<div class="min-h-screen bg-muted">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <%# Breadcrumb %>
+    <nav class="flex mb-6 text-sm" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-2">
+        <li>
+          <%= link_to "Admin", admin_metrics_path, class: "text-primary hover:text-primary/80" %>
+        </li>
+        <li>
+          <span class="text-muted-foreground">/</span>
+        </li>
+        <li>
+          <%= link_to "Tours", admin_tours_path, class: "text-primary hover:text-primary/80" %>
+        </li>
+        <li>
+          <span class="text-muted-foreground">/</span>
+        </li>
+        <li>
+          <%= link_to @tour.title, admin_tour_path(@tour), class: "text-primary hover:text-primary/80" %>
+        </li>
+        <li>
+          <span class="text-muted-foreground">/</span>
+        </li>
+        <li class="text-foreground font-semibold">Add-ons</li>
+      </ol>
+    </nav>
+
+    <%# Header %>
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-2">Manage Add-ons</h1>
+      <p class="text-muted-foreground">
+        Enhance <%= @tour.title %> with optional add-ons for your guests
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <%# Add new add-on form (left sidebar on large screens) %>
+      <div class="lg:col-span-1">
+        <div class="card sticky top-4">
+          <div class="card-body">
+            <h2 class="text-xl font-semibold mb-4">Add New Add-on</h2>
+            <div id="tour_add_on_form">
+              <%= render "form", tour: @tour, tour_add_on: @tour_add_on %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%# Existing add-ons list (main content) %>
+      <div class="lg:col-span-2">
+        <div class="card">
+          <div class="card-body">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-semibold">
+                Current Add-ons
+                <span class="text-sm text-muted-foreground font-normal">
+                  (<%= @tour_add_ons.count %> / 10 max)
+                </span>
+              </h2>
+
+              <% if @tour_add_ons.any? %>
+                <span class="text-sm text-muted-foreground">
+                  Drag to reorder
+                </span>
+              <% end %>
+            </div>
+
+            <% if @tour_add_ons.any? %>
+              <div id="tour_add_ons_list" class="space-y-4">
+                <%= render partial: "tour_add_on", collection: @tour_add_ons, locals: { tour: @tour } %>
+              </div>
+            <% else %>
+              <div class="empty-state-card">
+                <div class="empty-state-icon">
+                  <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                </div>
+                <h3 class="empty-state-title">No add-ons yet</h3>
+                <p class="empty-state-description">
+                  Start by creating your first add-on using the form on the left
+                </p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

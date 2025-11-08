@@ -1,0 +1,11 @@
+<%# locals: (text:, secondary: false) %>
+<!-- Table cell component for consistent styling
+     Usage:
+     <%= render "shared/table_cell", text: "John Doe" %>
+     <%= render "shared/table_cell", text: "john@example.com", secondary: true %>
+     <%= render "shared/table_cell", text: "Admin" %>
+-->
+
+<td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm <%= secondary ? "text-muted-foreground" : "text-foreground" %>">
+  <%= text %>
+</td>

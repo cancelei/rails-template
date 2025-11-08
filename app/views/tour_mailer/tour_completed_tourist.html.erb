@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Thank You for Joining the Tour!</h1>
+
+    <p>Dear <%= @booking.booked_name %>,</p>
+
+    <p>Thank you for participating in "<strong><%= @tour.title %></strong>" with <%= @guide.name %>.</p>
+
+    <h2>Tour Details:</h2>
+    <ul>
+      <li><strong>Tour:</strong> <%= @tour.title %></li>
+      <li><strong>Date:</strong> <%= @tour.starts_at.strftime("%B %d, %Y at %I:%M %p") %></li>
+      <li><strong>Location:</strong> <%= @tour.location_name %></li>
+      <li><strong>Guide:</strong> <%= @guide.name %></li>
+    </ul>
+
+    <% if @can_review %>
+      <h2>Share Your Experience</h2>
+      <p>
+        We'd love to hear about your experience! Please take a moment to leave a review and
+        help other travelers discover great tours.
+      </p>
+
+      <p>
+        <a href="<%= manage_booking_url(@booking, email: @booking.booked_email) %>"
+           style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+          Leave a Review
+        </a>
+      </p>
+    <% else %>
+      <p>Thank you for your review!</p>
+    <% end %>
+
+    <p>
+      We hope to see you on another tour soon!
+    </p>
+
+    <p>
+      Best regards,<br/>
+      The Tour Team
+    </p>
+  </body>
+</html>

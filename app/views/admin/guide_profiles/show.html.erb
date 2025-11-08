@@ -1,0 +1,147 @@
+<% provide(:page_title, @guide_profile.user.name) %>
+
+<div class="min-h-screen">
+  <!-- Notification area -->
+  <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+  <!-- Back button -->
+  <div class="mb-6">
+    <%= link_to admin_guide_profiles_path, class: "inline-flex items-center text-muted-foreground hover:text-foreground transition-colors" do %>
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Back to Guide Profiles
+    <% end %>
+  </div>
+
+  <!-- Guide Profile Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-foreground"><%= @guide_profile.user.name %></h1>
+    <p class="mt-2 text-muted-foreground"><%= @guide_profile.user.email %></p>
+  </div>
+
+  <!-- Guide Profile Section with Inline Editing -->
+  <%= turbo_frame_tag dom_id(@guide_profile, :profile) do %>
+    <%= render "shared/guide_profile_display", guide_profile: @guide_profile, context: :admin %>
+  <% end %>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="text-sm font-medium text-muted-foreground">Total Tours</h3>
+        <p class="text-3xl font-bold text-foreground mt-2"><%= @guide_profile.user.tours.count %></p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 class="text-sm font-medium text-muted-foreground">Upcoming Tours</h3>
+        <p class="text-3xl font-bold text-foreground mt-2">
+          <%= @guide_profile.user.tours.where("starts_at > ?", Time.current).count %>
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 class="text-sm font-medium text-muted-foreground">Total Bookings</h3>
+        <p class="text-3xl font-bold text-foreground mt-2">
+          <%= @guide_profile.user.tours.joins(:bookings).count %>
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 class="text-sm font-medium text-muted-foreground">Reviews</h3>
+        <p class="text-3xl font-bold text-foreground mt-2"><%= @guide_profile.comments.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tours Section -->
+  <%= turbo_stream_from "admin_guide_#{@guide_profile.user.id}_tours" %>
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold text-foreground mb-4">Tours</h2>
+    <% tours = @guide_profile.user.tours.includes(:bookings, :reviews, :weather_snapshots).order(starts_at: :desc) %>
+    <% if tours.any? %>
+      <div class="space-y-4" id="guide_tours">
+        <% tours.each do |tour| %>
+          <%= turbo_frame_tag dom_id(tour) do %>
+            <%= render "admin/guide_profiles/tour_row", tour: %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state-card">
+        <h3 class="empty-state-title">No tours yet</h3>
+        <p class="empty-state-description">This guide hasn't created any tours</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Reviews/Comments Section -->
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold text-foreground mb-4">Reviews & Comments</h2>
+    <% if @guide_profile.comments.any? %>
+      <div class="space-y-4">
+        <% @guide_profile.comments.includes(:user).order(created_at: :desc).each do |comment| %>
+          <div class="card">
+            <div class="card-body">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-2">
+                    <p class="font-medium text-foreground"><%= comment.user.name %></p>
+                    <span class="text-muted-foreground">•</span>
+                    <p class="text-sm text-muted-foreground"><%= time_ago_in_words(comment.created_at) %> ago</p>
+                  </div>
+                  <p class="text-foreground"><%= comment.content %></p>
+                </div>
+                <div class="flex items-center gap-2 text-muted-foreground">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                  </svg>
+                  <span><%= comment.likes_count %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state-card">
+        <h3 class="empty-state-title">No reviews yet</h3>
+        <p class="empty-state-description">No reviews or comments have been posted for this guide</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- User Account Information -->
+  <div>
+    <h2 class="text-2xl font-bold text-foreground mb-4">Account Information</h2>
+    <div class="card">
+      <div class="card-body space-y-3">
+        <div class="flex justify-between py-2 border-b border-border">
+          <span class="text-muted-foreground">User ID</span>
+          <span class="font-medium text-foreground"><%= @guide_profile.user.id %></span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-border">
+          <span class="text-muted-foreground">Email</span>
+          <span class="font-medium text-foreground"><%= @guide_profile.user.email %></span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-border">
+          <span class="text-muted-foreground">Role</span>
+          <span class="font-medium text-foreground"><%= @guide_profile.user.role.titleize %></span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-border">
+          <span class="text-muted-foreground">Member Since</span>
+          <span class="font-medium text-foreground"><%= @guide_profile.user.created_at.strftime("%B %d, %Y") %></span>
+        </div>
+        <div class="flex justify-between py-2">
+          <span class="text-muted-foreground">Last Sign In</span>
+          <span class="font-medium text-foreground">
+            <%= @guide_profile.user.last_login_at&.strftime("%B %d, %Y at %I:%M %p") || "Never" %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

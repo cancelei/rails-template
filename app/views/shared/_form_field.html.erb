@@ -1,0 +1,41 @@
+<%# locals: (form:, field:, label: nil, type: :text, placeholder: nil, required: false, help_text: nil, rows: nil, options_list: nil, include_blank: false, extra_attributes: {}) %>
+
+<div class="form-group">
+  <%= form.label field, label || field.to_s.titleize, class: "form-label #{"form-label-required" if required}" %>
+
+  <% if help_text.present? %>
+    <p class="text-xs text-muted-foreground mb-1"><%= help_text %></p>
+  <% end %>
+
+  <% case type %>
+    <% when :textarea %>
+      <%= form.text_area field,
+                         class: "form-textarea",
+                         placeholder:,
+                         required:,
+                         rows: rows || 4 %>
+    <% when :select %>
+      <%= form.select field,
+                      options_list || [],
+                      { include_blank: required ? true : include_blank },
+                      class: "form-select",
+                      required: %>
+    <% when :checkbox %>
+      <div class="flex items-center">
+        <%= form.check_box field, class: "form-checkbox", required: %>
+        <span class="ml-2 text-sm text-foreground"><%= label %></span>
+      </div>
+    <% else %>
+      <%= form.send("#{type}_field", field,
+                    class: "form-input",
+                    placeholder:,
+                    required:,
+                    **extra_attributes) %>
+  <% end %>
+
+  <% if form.object.errors[field].any? %>
+    <div class="text-red-500 text-xs mt-1">
+      <%= form.object.errors[field].to_sentence %>
+    </div>
+  <% end %>
+</div>
